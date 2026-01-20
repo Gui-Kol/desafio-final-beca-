@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Table(name = "clients")
 @Entity(name = "client")
@@ -38,9 +36,6 @@ public class ClientEntity {
     @Column(name = "last_update_date")
     private LocalDate lastUpdateDate;
     private boolean active;
-    @ManyToMany
-    @JoinTable(name = "roles")
-    private Set<RoleEntity> role = new HashSet<>();;
     @Column(name = "last_login_date")
     private LocalDateTime lastLoginDate;
 

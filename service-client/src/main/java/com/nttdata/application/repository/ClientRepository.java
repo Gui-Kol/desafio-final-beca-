@@ -11,4 +11,6 @@ public interface ClientRepository {
     Client registerClientRoleClient(Client client);
 
     Client findClientByCpf(String cpf);
+
+    void deleteClient(Long id);
 }

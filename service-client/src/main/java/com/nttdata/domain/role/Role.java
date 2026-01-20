@@ -9,7 +9,8 @@ public class Role {
         this.clientId = clientId;
         this.name = name;
     }
-    public Role(long id, long clientId, RoleName name) {
+
+    public Role(Long id, Long clientId, RoleName name) {
         this.id = id;
         this.clientId = clientId;
         this.name = name;

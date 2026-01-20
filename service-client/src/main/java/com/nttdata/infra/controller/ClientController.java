@@ -1,11 +1,11 @@
 package com.nttdata.infra.controller;
 
-import com.nttdata.application.usecases.FindClientByCpf;
+import com.nttdata.application.usecases.client.DeleteClient;
+import com.nttdata.application.usecases.client.FindClientByCpf;
+import com.nttdata.application.usecases.client.ListClients;
+import com.nttdata.application.usecases.client.RegisterClientRoleClient;
 import com.nttdata.domain.client.Client;
 import com.nttdata.infra.controller.dtos.ClientDto;
-import com.nttdata.application.usecases.ListClients;
-import com.nttdata.application.usecases.RegisterClientRoleClient;
-import com.nttdata.infra.gateway.role.RoleMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -17,13 +17,14 @@ import java.time.LocalDate;
 public class ClientController {
     private final ListClients listClients;
     private final RegisterClientRoleClient registerClientRoleClient;
-    private final RoleMapper roleMapper;
+    private final DeleteClient deleteClient;
+
     private final FindClientByCpf findClientByCpf;
 
-    public ClientController(ListClients listClients, RegisterClientRoleClient registerClientRoleClient, RoleMapper roleMapper, FindClientByCpf findClientByCpf) {
+    public ClientController(ListClients listClients, RegisterClientRoleClient registerClientRoleClient, DeleteClient deleteClient, FindClientByCpf findClientByCpf) {
         this.listClients = listClients;
         this.registerClientRoleClient = registerClientRoleClient;
-        this.roleMapper = roleMapper;
+        this.deleteClient = deleteClient;
         this.findClientByCpf = findClientByCpf;
     }
 
@@ -35,10 +36,7 @@ public class ClientController {
 
     @PostMapping("/role_client")
     public ResponseEntity<?> registerClient(@RequestBody ClientDto dto, UriComponentsBuilder builder) {
-        String role = "ROLE_CLIENT";
-        System.out.println(dto.roles());
         var clientToRegister = new Client(
-                dto.id(),
                 dto.name(),
                 dto.email(),
                 dto.address(),
@@ -55,5 +53,13 @@ public class ClientController {
         return ResponseEntity.created(uri).body("Client registered successfully: " + registeredClient);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteClient(@PathVariable Long id) {
+        deleteClient.deleteClient(id);
+        return ResponseEntity.ok("Client with ID " + id + " deleted successfully.");
+    }
 
 }
+
+
+

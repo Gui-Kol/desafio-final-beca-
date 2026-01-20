@@ -1,12 +1,9 @@
 package com.nttdata.domain.client;
 
 import com.nttdata.domain.address.Address;
-import com.nttdata.domain.role.Role;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 public class Client {
     private Long id;
@@ -21,24 +18,15 @@ public class Client {
     private LocalDate creationDate;
     private LocalDate lastUpdateDate;
     private boolean active;
-    private Set<Role> roles = new HashSet<>();
     private LocalDateTime lastLoginDate;
 
-    public Client(Long id, String name, String email, Address address, String username, String password, String cpf, LocalDate birthDay, String telephone, LocalDate creationDate, boolean active) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.address = address;
-        this.username = username;
-        this.password = password;
-        this.cpf = cpf;
-        this.birthDay = birthDay;
-        this.telephone = telephone;
-        this.creationDate = creationDate;
-        this.active = active;
+
+    public Client(String name, String email, Address address, String username, String password, String cpf, LocalDate birthDay, String telephone, LocalDate creationDate, boolean active) {
+        this(null, name, email, address, username, password, cpf, birthDay, telephone, creationDate, LocalDate.now(), active, LocalDateTime.now());
     }
 
-    public Client(Long id, String name, String email, Address address, String username, String password, String cpf, LocalDate birthDay, String telephone, LocalDate creationDate, LocalDate lastUpdateDate, boolean active, Set<Role> roles, LocalDateTime lastLoginDate) {
+
+    public Client(Long id, String name, String email, Address address, String username, String password, String cpf, LocalDate birthDay, String telephone, LocalDate creationDate, LocalDate lastUpdateDate, boolean active, LocalDateTime lastLoginDate) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -51,7 +39,6 @@ public class Client {
         this.creationDate = creationDate;
         this.lastUpdateDate = lastUpdateDate;
         this.active = active;
-        this.roles = roles;
         this.lastLoginDate = lastLoginDate;
     }
 
@@ -115,11 +102,12 @@ public class Client {
         this.lastLoginDate = lastLoginDate;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
@@ -137,7 +125,6 @@ public class Client {
                 ", creationDate=" + creationDate +
                 ", lastUpdateDate=" + lastUpdateDate +
                 ", active=" + active +
-                ", roles=" + roles +
                 ", lastLoginDate=" + lastLoginDate +
                 '}';
     }
