@@ -1,11 +1,9 @@
 package com.nttdata.infra.gateway.client;
 
 import com.nttdata.domain.client.Client;
-import com.nttdata.domain.role.Role;
 import com.nttdata.infra.gateway.address.AddressMapper;
 import com.nttdata.infra.gateway.role.RoleMapper;
 import com.nttdata.infra.persistence.client.ClientEntity;
-import com.nttdata.infra.persistence.role.RoleEntity;
 
 public class ClientMapper {
     private final AddressMapper addressMapper;
@@ -17,7 +15,7 @@ public class ClientMapper {
     }
 
     public Client toClient(ClientEntity entity) {
-        return new Client(entity.getId(),entity.getName(),entity.getEmail(),
+        return new Client(entity.getId(),entity.getName(), entity.getEmail(),
                 addressMapper.address(entity.getAddress()), entity.getUsername(), entity.getPassword(),
                 entity.getCpf(), entity.getBirthDay(), entity.getTelephone(), entity.getCreationDate(),
                 entity.getLastUpdateDate(), entity.isActive(), entity.getLastLoginDate()

@@ -6,8 +6,7 @@ import com.nttdata.application.usecases.role.RegisterRoleClient;
 import com.nttdata.domain.client.Client;
 import com.nttdata.domain.role.Role;
 import com.nttdata.domain.role.RoleName;
-import com.nttdata.infra.gateway.role.RoleMapper;
-import com.nttdata.infra.gateway.role.RoleRepositoryJpa;
+import com.nttdata.infra.controller.dtos.ClientUpdateDto;
 import com.nttdata.infra.persistence.client.ClientEntity;
 import com.nttdata.infra.persistence.client.ClientRepositoryEntity;
 import jakarta.transaction.Transactional;
@@ -19,17 +18,14 @@ public class ClientRepositoryJpa implements ClientRepository {
     private final ClientMapper clientMapper;
     private final RegisterRoleClient registerRoleClient;
     private final DeleteRoleClient deleteRoleClient;
-    private final RoleRepositoryJpa roleRepositoryJpa;
-    private final RoleMapper roleMapper;
 
-    public ClientRepositoryJpa(ClientRepositoryEntity entityRepository, ClientMapper mapper, RegisterRoleClient registerRoleClient, DeleteRoleClient deleteRoleClient, RoleRepositoryJpa roleRepositoryJpa, ClientMapper clientMapper, RoleMapper roleMapper) {
+    public ClientRepositoryJpa(ClientRepositoryEntity entityRepository, ClientMapper clientMapper, RegisterRoleClient registerRoleClient, DeleteRoleClient deleteRoleClient) {
         this.entityRepository = entityRepository;
+        this.clientMapper = clientMapper;
         this.registerRoleClient = registerRoleClient;
         this.deleteRoleClient = deleteRoleClient;
-        this.roleRepositoryJpa = roleRepositoryJpa;
-        this.clientMapper = clientMapper;
-        this.roleMapper = roleMapper;
     }
+
 
     @Override
     public List<Client> clientList() {
@@ -61,9 +57,16 @@ public class ClientRepositoryJpa implements ClientRepository {
 
     @Override
     public void deleteClient(Long id) {
-        ClientEntity entityDeleted = entityRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente com ID " + id + " não encontrado para exclusão."));
+        ClientEntity entityDeleted = entityRepository.getReferenceById(id);
         entityRepository.delete(entityDeleted);
         deleteRoleClient.delete(id);
+    }
+
+    @Override
+    @Transactional
+    public Client updateClient(Client client, Long id) {
+        ClientEntity oldEntity = entityRepository.getReferenceById(id);
+        oldEntity.update(client);
+        return clientMapper.toClient(entityRepository.getReferenceById(id));
     }
 }

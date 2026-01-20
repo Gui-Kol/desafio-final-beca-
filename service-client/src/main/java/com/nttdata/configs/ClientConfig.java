@@ -1,17 +1,13 @@
 package com.nttdata.configs;
 
 import com.nttdata.application.repository.ClientRepository;
-import com.nttdata.application.usecases.client.DeleteClient;
-import com.nttdata.application.usecases.client.FindClientByCpf;
-import com.nttdata.application.usecases.client.ListClients;
-import com.nttdata.application.usecases.client.RegisterClientRoleClient;
+import com.nttdata.application.usecases.client.*;
 import com.nttdata.application.usecases.role.DeleteRoleClient;
 import com.nttdata.application.usecases.role.RegisterRoleClient;
 import com.nttdata.infra.gateway.address.AddressMapper;
 import com.nttdata.infra.gateway.client.ClientMapper;
 import com.nttdata.infra.gateway.client.ClientRepositoryJpa;
 import com.nttdata.infra.gateway.role.RoleMapper;
-import com.nttdata.infra.gateway.role.RoleRepositoryJpa;
 import com.nttdata.infra.persistence.client.ClientRepositoryEntity;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,10 +21,9 @@ public class ClientConfig {
 
     @Bean
     public ClientRepositoryJpa clientRepositoryJpa(ClientRepositoryEntity repository, ClientMapper mapper, RegisterRoleClient registerRoleClient,
-                                                   DeleteRoleClient deleteRoleClient ,RoleRepositoryJpa roleRepositoryJpa,
-                                                   ClientMapper clientMapper, RoleMapper roleMapper) {
+                                                   DeleteRoleClient deleteRoleClient) {
         return new ClientRepositoryJpa(repository, mapper, registerRoleClient,
-                deleteRoleClient ,roleRepositoryJpa, clientMapper, roleMapper);
+                deleteRoleClient);
     }
 
     @Bean
@@ -47,7 +42,11 @@ public class ClientConfig {
     }
 
     @Bean
-    public DeleteClient deleteClient(ClientRepository repository){
+    public DeleteClient deleteClient(ClientRepository repository) {
         return new DeleteClient(repository);
+    }
+    @Bean
+    public UpdateClient updateClient(ClientRepository repository){
+        return new UpdateClient(repository);
     }
 }

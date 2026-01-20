@@ -13,4 +13,6 @@ public interface ClientRepository {
     Client findClientByCpf(String cpf);
 
     void deleteClient(Long id);
+
+    Client updateClient(Client client, Long id);
 }

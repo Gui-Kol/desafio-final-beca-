@@ -3,10 +3,8 @@ package com.nttdata.infra.controller.dtos;
 import com.nttdata.domain.address.Address;
 
 import java.time.LocalDate;
-import java.util.Set;
 
-public record ClientDto(
-        Long id,
+public record ClientUpdateDto(
         String name,
         String email,
         Address address,
@@ -15,6 +13,6 @@ public record ClientDto(
         String cpf,
         LocalDate birthDay,
         String telephone,
-        String roles
-        ) {
+        boolean active
+) {
 }
