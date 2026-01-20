@@ -1,4 +1,4 @@
-package com.nttdata.domain.roles;
+package com.nttdata.domain.role;
 
 public enum RoleName {
     ROLE_CLIENT,

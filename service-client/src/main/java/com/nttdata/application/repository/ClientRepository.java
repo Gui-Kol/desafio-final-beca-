@@ -8,4 +8,7 @@ public interface ClientRepository {
 
     List<Client> clientList();
 
+    Client registerClientRoleClient(Client client);
+
+    Client findClientByCpf(String cpf);
 }
