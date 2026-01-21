@@ -8,7 +8,6 @@ public class Transaction {
     private UUID id;
     private Long sourceAccountId;
     private Long destinationAccountId;
-    private TransactionType type;
     private BigDecimal value;
     private String currency; //moeda
     private BigDecimal appliedExchangeRate; //taxa de cambio aplicada
@@ -16,5 +15,8 @@ public class Transaction {
     private String description;
     private LocalDateTime transactionDate;
     private StatusTransaction status;
+    private TransactionType type;
+    private PaymentMethod method;
+
 
 }

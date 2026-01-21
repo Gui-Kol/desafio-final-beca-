@@ -4,5 +4,6 @@ public enum TransactionType {
     DEPOSIT,
     WITHDRAWAL, //Saque
     TRANSFER,
-    PURCHASE
+    PURCHASE,
+
 }
