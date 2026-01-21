@@ -1,7 +1,9 @@
 package com.nttdata.infra.controller;
 
-import com.nttdata.application.usecases.client.*;
-import com.nttdata.domain.client.Client;
+import com.nttdata.application.usecases.client.DeleteClient;
+import com.nttdata.application.usecases.client.ListClients;
+import com.nttdata.application.usecases.client.RegisterClientRoleClient;
+import com.nttdata.application.usecases.client.UpdateClient;
 import com.nttdata.domain.client.ClientFabric;
 import com.nttdata.infra.controller.dtos.client.ClientDto;
 import com.nttdata.infra.controller.dtos.client.ClientUpdateDto;
@@ -9,8 +11,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/clients")
@@ -39,9 +39,9 @@ public class ClientController {
     @PostMapping
     public ResponseEntity<?> registerClient(@RequestBody @Valid ClientDto dto, UriComponentsBuilder builder) {
 
-        var clientToRegister = clientFabric.fabric(dto.name(),dto.email(),dto.username(),dto.password(),dto.cpf(),dto.birthDay(),dto.telephone(),
-                dto.address().street(),dto.address().number(),dto.address().addressDetails(),dto.address().neighborhood(),dto.address().city(),
-                dto.address().state(),dto.address().postcode(),dto.address().country());
+        var clientToRegister = clientFabric.fabric(dto.name(), dto.email(), dto.username(), dto.password(), dto.cpf(), dto.birthDay(), dto.telephone(),
+                dto.address().street(), dto.address().number(), dto.address().addressDetails(), dto.address().neighborhood(), dto.address().city(),
+                dto.address().state(), dto.address().postcode(), dto.address().country());
 
         var registeredClient = registerClientRoleClient.register(clientToRegister);
         var uri = builder.path("/clients/{id}").buildAndExpand(registeredClient.getId()).toUri();
@@ -58,9 +58,9 @@ public class ClientController {
     @PutMapping("/{id}")
     public ResponseEntity updateClient(@RequestBody ClientUpdateDto dto, @PathVariable Long id) {
 
-        var client = clientFabric.fabric(dto.name(),dto.email(),dto.username(),dto.password(),dto.cpf(),dto.birthDay(),dto.telephone(),
-                dto.address().street(),dto.address().number(),dto.address().addressDetails(),dto.address().neighborhood(),dto.address().city(),
-                dto.address().state(),dto.address().postcode(),dto.address().country());
+        var client = clientFabric.fabric(dto.name(), dto.email(), dto.username(), dto.password(), dto.cpf(), dto.birthDay(), dto.telephone(),
+                dto.address().street(), dto.address().number(), dto.address().addressDetails(), dto.address().neighborhood(), dto.address().city(),
+                dto.address().state(), dto.address().postcode(), dto.address().country());
 
         var clientUpdated = updateClient.update(client, id);
         return ResponseEntity.ok("Client updated successfully: " + clientUpdated);

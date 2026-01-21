@@ -1,12 +1,11 @@
 package com.nttdata.infra.excel;
 
 import com.nttdata.application.repository.ClientRepository;
+import com.nttdata.domain.client.Client;
+import com.nttdata.domain.client.ClientFabric;
 import com.nttdata.infra.excel.usecases.GetCellValueAsLocalDate;
 import com.nttdata.infra.excel.usecases.GetCellValueAsString;
 import com.nttdata.infra.excel.usecases.IsRowEmpty;
-import com.nttdata.infra.gateway.client.ClientMapper;
-import com.nttdata.infra.persistence.address.AddressEntity;
-import com.nttdata.infra.persistence.client.ClientEntity;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -18,31 +17,30 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 @Service
 public class ExcelService {
+    private final ClientFabric clientFabric;
     private final ClientRepository clientRepository;
     private final GetCellValueAsString getCellValueAsString;
     private final IsRowEmpty isRowEmpty;
     private final GetCellValueAsLocalDate getCellValueAsLocalDate;
-    private final ClientMapper clientMapper;
 
-    public ExcelService(ClientRepository clientRepository, GetCellValueAsString getCellValueAsString, IsRowEmpty isRowEmpty, GetCellValueAsLocalDate getCellValueAsLocalDate, ClientMapper clientMapper) {
+    public ExcelService(ClientFabric clientFabric, ClientRepository clientRepository, GetCellValueAsString getCellValueAsString, IsRowEmpty isRowEmpty, GetCellValueAsLocalDate getCellValueAsLocalDate) {
+        this.clientFabric = clientFabric;
         this.clientRepository = clientRepository;
         this.getCellValueAsString = getCellValueAsString;
         this.isRowEmpty = isRowEmpty;
         this.getCellValueAsLocalDate = getCellValueAsLocalDate;
-        this.clientMapper = clientMapper;
     }
 
+
     @Transactional
-    public List<ClientEntity> importClientsFromExcel(MultipartFile file) throws IOException {
-        List<ClientEntity> importedClients = new ArrayList<>();
+    public List<Client> importClientsFromExcel(MultipartFile file) throws IOException {
+        List<Client> importedClients = new ArrayList<>();
 
         if (file.isEmpty()) {
             throw new IllegalArgumentException("The file sent is empty.");
@@ -79,7 +77,7 @@ public class ExcelService {
                     String username = getCellValueAsString.get(currentRow.getCell(4));
                     String password = getCellValueAsString.get(currentRow.getCell(5));
                     String telephone = getCellValueAsString.get(currentRow.getCell(6));
-
+                    //Address
                     String street = getCellValueAsString.get(currentRow.getCell(7));
                     String number = getCellValueAsString.get(currentRow.getCell(8));
                     String addressDetails = getCellValueAsString.get(currentRow.getCell(9));
@@ -89,25 +87,19 @@ public class ExcelService {
                     String postcode = getCellValueAsString.get(currentRow.getCell(13));
                     String country = getCellValueAsString.get(currentRow.getCell(14));
 
-                    AddressEntity address = new AddressEntity(street, number, addressDetails, neighborhood, city, state, postcode, country);
-                    var date = LocalDate.ofYearDay(0, 1);
-                    var loginDate = LocalDateTime.of(date, LocalTime.ofSecondOfDay(0));
-
-                    ClientEntity client = new ClientEntity(null, name, email, address, username, password,
-                            cpf, birthDay, telephone, LocalDate.now(), date, true, loginDate);
+                    Client client = clientFabric.fabric(name, email, username, password, cpf, birthDay, telephone, street, number, addressDetails, neighborhood, city, state, postcode, country);
 
                     if (name.isEmpty() || email.isEmpty() || cpf.isEmpty()) {
                         System.err.println("Erro na linha " + rowNum + ": Nome, Email ou CPF não podem ser vazios. Cliente '" + name + "' ignorado.");
                         continue;
                     }
 
-                    clientRepository.registerClientRoleClient(clientMapper.toClient(client));
+                    clientRepository.registerClientRoleClient(client);
                     importedClients.add(client);
                     System.out.println("✅ Cliente '" + client.getName() + "' da linha " + rowNum + " importado com sucesso.");
 
                 } catch (Exception e) {
                     System.err.println("❌ Erro ao processar linha " + rowNum + ": " + e.getMessage());
-                    e.printStackTrace();
                 }
             }
         }

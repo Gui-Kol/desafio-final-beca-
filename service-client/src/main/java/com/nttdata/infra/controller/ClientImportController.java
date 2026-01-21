@@ -1,7 +1,7 @@
 package com.nttdata.infra.controller;
 
+import com.nttdata.domain.client.Client;
 import com.nttdata.infra.excel.ExcelService;
-import com.nttdata.infra.persistence.client.ClientEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,16 +14,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/clients")
-public class ClientImportController{
+public class ClientImportController {
     private final ExcelService excelService;
 
     public ClientImportController(ExcelService excelService) {
         this.excelService = excelService;
     }
+
     @PostMapping("/import")
     public ResponseEntity<String> importClients(@RequestParam("file") MultipartFile file) {
         try {
-            List<ClientEntity> importedClients = excelService.importClientsFromExcel(file);
+            List<Client> importedClients = excelService.importClientsFromExcel(file);
             if (importedClients.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No valid client found in the Excel file for import.");
             }
