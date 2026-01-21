@@ -4,8 +4,6 @@ import com.nttdata.domain.address.Address;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Client {
     private Long id;
@@ -21,7 +19,6 @@ public class Client {
     private LocalDate lastUpdateDate;
     private boolean active;
     private LocalDateTime lastLoginDate;
-
 
 
     public Client(String name, String email, Address address, String username, String password, String cpf, LocalDate birthDay, String telephone, LocalDate creationDate, boolean active) {
