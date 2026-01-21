@@ -2,6 +2,7 @@ package com.nttdata.infra.controller;
 
 import com.nttdata.application.usecases.client.*;
 import com.nttdata.domain.client.Client;
+import com.nttdata.domain.client.ClientFabric;
 import com.nttdata.infra.controller.dtos.client.ClientDto;
 import com.nttdata.infra.controller.dtos.client.ClientUpdateDto;
 import jakarta.validation.Valid;
@@ -15,17 +16,19 @@ import java.time.LocalDate;
 @RequestMapping("/clients")
 public class ClientController {
     private final ListClients listClients;
+    private final ClientFabric clientFabric;
     private final RegisterClientRoleClient registerClientRoleClient;
     private final DeleteClient deleteClient;
     private final UpdateClient updateClient;
 
-
-    public ClientController(ListClients listClients, RegisterClientRoleClient registerClientRoleClient, DeleteClient deleteClient, FindClientByCpf findClientByCpf, UpdateClient updateClient) {
+    public ClientController(ListClients listClients, ClientFabric clientFabric, RegisterClientRoleClient registerClientRoleClient, DeleteClient deleteClient, UpdateClient updateClient) {
         this.listClients = listClients;
+        this.clientFabric = clientFabric;
         this.registerClientRoleClient = registerClientRoleClient;
         this.deleteClient = deleteClient;
         this.updateClient = updateClient;
     }
+
 
     @GetMapping
     public ResponseEntity listClients() {
@@ -35,23 +38,16 @@ public class ClientController {
 
     @PostMapping
     public ResponseEntity<?> registerClient(@RequestBody @Valid ClientDto dto, UriComponentsBuilder builder) {
-        var clientToRegister = new Client(
-                dto.name(),
-                dto.email(),
-                dto.address(),
-                dto.username(),
-                dto.password(),
-                dto.cpf(),
-                dto.birthDay(),
-                dto.telephone(),
-                LocalDate.now(),
-                true
-        );
+
+        var clientToRegister = clientFabric.fabric(dto.name(),dto.email(),dto.username(),dto.password(),dto.cpf(),dto.birthDay(),dto.telephone(),
+                dto.address().street(),dto.address().number(),dto.address().addressDetails(),dto.address().neighborhood(),dto.address().city(),
+                dto.address().state(),dto.address().postcode(),dto.address().country());
+
         var registeredClient = registerClientRoleClient.register(clientToRegister);
         var uri = builder.path("/clients/{id}").buildAndExpand(registeredClient.getId()).toUri();
         return ResponseEntity.created(uri).body("Client registered successfully: " + registeredClient);
     }
-    //ESTA DELETANDO DO BANCO DE DADOS, ALTERAR PARA DEIXAR O CLIENT COMO INATIVO
+
     @DeleteMapping("/{id}")
     public ResponseEntity deleteClient(@PathVariable Long id) {
         deleteClient.deleteClient(id);
@@ -61,14 +57,11 @@ public class ClientController {
 
     @PutMapping("/{id}")
     public ResponseEntity updateClient(@RequestBody ClientUpdateDto dto, @PathVariable Long id) {
-        var client = new Client(null,
-                dto.name(),dto.email(),
-                dto.address(),dto.username(),
-                dto.password(),dto.cpf(),
-                dto.birthDay(),dto.telephone(),
-                null,LocalDate.now(),
-                true, null
-        );
+
+        var client = clientFabric.fabric(dto.name(),dto.email(),dto.username(),dto.password(),dto.cpf(),dto.birthDay(),dto.telephone(),
+                dto.address().street(),dto.address().number(),dto.address().addressDetails(),dto.address().neighborhood(),dto.address().city(),
+                dto.address().state(),dto.address().postcode(),dto.address().country());
+
         var clientUpdated = updateClient.update(client, id);
         return ResponseEntity.ok("Client updated successfully: " + clientUpdated);
     }

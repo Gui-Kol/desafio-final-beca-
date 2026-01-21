@@ -4,6 +4,7 @@ import com.nttdata.domain.address.Address;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class Client {
     private Long id;
@@ -22,7 +23,7 @@ public class Client {
 
 
     public Client(String name, String email, Address address, String username, String password, String cpf, LocalDate birthDay, String telephone, LocalDate creationDate, boolean active) {
-        this(null, name, email, address, username, password, cpf, birthDay, telephone, creationDate, LocalDate.now(), active, LocalDateTime.now());
+        this(null, name, email, address, username, password, cpf, birthDay, telephone, creationDate, LocalDate.ofYearDay(0, 1), active, LocalDateTime.of(LocalDate.ofYearDay(0, 1), LocalTime.ofSecondOfDay(0)));
     }
 
 

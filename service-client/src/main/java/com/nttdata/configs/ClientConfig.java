@@ -4,6 +4,7 @@ import com.nttdata.application.repository.ClientRepository;
 import com.nttdata.application.usecases.client.*;
 import com.nttdata.application.usecases.role.DeleteRoleClient;
 import com.nttdata.application.usecases.role.RegisterRoleClient;
+import com.nttdata.domain.client.ClientFabric;
 import com.nttdata.infra.gateway.address.AddressMapper;
 import com.nttdata.infra.gateway.client.ClientMapper;
 import com.nttdata.infra.gateway.client.ClientRepositoryJpa;
@@ -47,5 +48,9 @@ public class ClientConfig {
     @Bean
     public UpdateClient updateClient(ClientRepository repository){
         return new UpdateClient(repository);
+    }
+    @Bean
+    public ClientFabric clientFabric(){
+        return new ClientFabric();
     }
 }
