@@ -23,6 +23,7 @@
     </developers>
     <modules>
         <module>service-client</module>
+        <module>service-transaction</module>
     </modules>
     <scm>
         <connection/>
