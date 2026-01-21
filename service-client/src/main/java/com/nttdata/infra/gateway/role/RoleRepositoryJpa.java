@@ -2,6 +2,8 @@ package com.nttdata.infra.gateway.role;
 
 import com.nttdata.application.repository.RoleRepository;
 import com.nttdata.domain.role.Role;
+import com.nttdata.domain.role.RoleName;
+import com.nttdata.infra.persistence.role.RoleEntity;
 import com.nttdata.infra.persistence.role.RoleRepositoryEntity;
 
 public class RoleRepositoryJpa implements RoleRepository {
@@ -22,6 +24,20 @@ public class RoleRepositoryJpa implements RoleRepository {
     @Override
     public void deleteRoleClient(Long id) {
         var roleEntity = repository.findByClientId(id);
-        repository.delete(roleEntity);
+        roleEntity.delete();
+        repository.save(roleEntity);
+    }
+
+    @Override
+    public Role findRoleByClientId(Long id) {
+        return mapper.toRole(repository.findByClientId(id));
+    }
+
+    @Override
+    public Role updateClientRole(Long clientId, RoleName roleName) {
+        RoleEntity entity = repository.findByClientId(clientId);
+        entity.update(entity.getClientId(),roleName);
+        repository.save(entity);
+        return mapper.toRole(repository.findByClientId(clientId));
     }
 }

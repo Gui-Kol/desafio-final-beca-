@@ -4,10 +4,7 @@ import com.nttdata.domain.address.Address;
 import com.nttdata.domain.client.Client;
 import com.nttdata.infra.persistence.address.AddressEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -36,6 +33,7 @@ public class ClientEntity {
     private LocalDate creationDate;
     @Column(name = "last_update_date")
     private LocalDate lastUpdateDate;
+    @Setter
     private boolean active;
     @Column(name = "last_login_date")
     private LocalDateTime lastLoginDate;
@@ -44,6 +42,9 @@ public class ClientEntity {
     public void update(Client client) {
         if (client == null) {
             throw new RuntimeException("Client cannot be null to update.");
+        }
+        if (client.getEmail() != null) {
+            this.email = client.getEmail();
         }
         if (client.getName() != null) {
             this.name = client.getName();
@@ -63,7 +64,6 @@ public class ClientEntity {
         if (client.getTelephone() != null) {
             this.telephone = client.getTelephone();
         }
-        this.active = client.isActive();
         if (client.getAddress() != null) {
             updateAddress(client);
         }

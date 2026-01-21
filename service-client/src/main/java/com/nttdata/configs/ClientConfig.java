@@ -25,7 +25,6 @@ public class ClientConfig {
         return new ClientRepositoryJpa(repository, mapper, registerRoleClient,
                 deleteRoleClient);
     }
-
     @Bean
     public ClientMapper clientMapper(AddressMapper addressMapper, RoleMapper roleMapper) {
         return new ClientMapper(addressMapper, roleMapper);

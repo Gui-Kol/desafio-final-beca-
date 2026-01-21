@@ -6,7 +6,6 @@ import com.nttdata.application.usecases.role.RegisterRoleClient;
 import com.nttdata.domain.client.Client;
 import com.nttdata.domain.role.Role;
 import com.nttdata.domain.role.RoleName;
-import com.nttdata.infra.controller.dtos.ClientUpdateDto;
 import com.nttdata.infra.persistence.client.ClientEntity;
 import com.nttdata.infra.persistence.client.ClientRepositoryEntity;
 import jakarta.transaction.Transactional;
@@ -29,7 +28,7 @@ public class ClientRepositoryJpa implements ClientRepository {
 
     @Override
     public List<Client> clientList() {
-        return entityRepository.findAll()
+        return  entityRepository.findAll()
                 .stream()
                 .map(clientMapper::toClient)
                 .toList();
@@ -58,7 +57,7 @@ public class ClientRepositoryJpa implements ClientRepository {
     @Override
     public void deleteClient(Long id) {
         ClientEntity entityDeleted = entityRepository.getReferenceById(id);
-        entityRepository.delete(entityDeleted);
+        entityDeleted.setActive(false);
         deleteRoleClient.delete(id);
     }
 

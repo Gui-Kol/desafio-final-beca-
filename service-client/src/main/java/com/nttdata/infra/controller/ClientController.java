@@ -2,8 +2,9 @@ package com.nttdata.infra.controller;
 
 import com.nttdata.application.usecases.client.*;
 import com.nttdata.domain.client.Client;
-import com.nttdata.infra.controller.dtos.ClientDto;
-import com.nttdata.infra.controller.dtos.ClientUpdateDto;
+import com.nttdata.infra.controller.dtos.client.ClientDto;
+import com.nttdata.infra.controller.dtos.client.ClientUpdateDto;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -18,6 +19,7 @@ public class ClientController {
     private final DeleteClient deleteClient;
     private final UpdateClient updateClient;
 
+
     public ClientController(ListClients listClients, RegisterClientRoleClient registerClientRoleClient, DeleteClient deleteClient, FindClientByCpf findClientByCpf, UpdateClient updateClient) {
         this.listClients = listClients;
         this.registerClientRoleClient = registerClientRoleClient;
@@ -31,8 +33,8 @@ public class ClientController {
         return ResponseEntity.ok(list);
     }
 
-    @PostMapping("/role_client")
-    public ResponseEntity<?> registerClient(@RequestBody ClientDto dto, UriComponentsBuilder builder) {
+    @PostMapping
+    public ResponseEntity<?> registerClient(@RequestBody @Valid ClientDto dto, UriComponentsBuilder builder) {
         var clientToRegister = new Client(
                 dto.name(),
                 dto.email(),
@@ -55,6 +57,8 @@ public class ClientController {
         deleteClient.deleteClient(id);
         return ResponseEntity.ok("Client with ID " + id + " deleted successfully.");
     }
+
+
     @PutMapping("/{id}")
     public ResponseEntity updateClient(@RequestBody ClientUpdateDto dto, @PathVariable Long id) {
         var client = new Client(null,
@@ -63,7 +67,7 @@ public class ClientController {
                 dto.password(),dto.cpf(),
                 dto.birthDay(),dto.telephone(),
                 null,LocalDate.now(),
-                dto.active(),null
+                true, null
         );
         var clientUpdated = updateClient.update(client, id);
         return ResponseEntity.ok("Client updated successfully: " + clientUpdated);

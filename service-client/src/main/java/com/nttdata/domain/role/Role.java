@@ -1,8 +1,8 @@
 package com.nttdata.domain.role;
 
 public class Role {
-    private long id;
-    private long clientId;
+    private Long id;
+    private Long clientId;
     private RoleName name;
 
     public Role(long clientId, RoleName name) {

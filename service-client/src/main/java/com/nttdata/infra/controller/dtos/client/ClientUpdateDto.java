@@ -1,12 +1,10 @@
-package com.nttdata.infra.controller.dtos;
+package com.nttdata.infra.controller.dtos.client;
 
 import com.nttdata.domain.address.Address;
 
 import java.time.LocalDate;
-import java.util.Set;
 
-public record ClientDto(
-        Long id,
+public record ClientUpdateDto(
         String name,
         String email,
         Address address,
@@ -14,7 +12,6 @@ public record ClientDto(
         String password,
         String cpf,
         LocalDate birthDay,
-        String telephone,
-        String roles
-        ) {
+        String telephone
+) {
 }
