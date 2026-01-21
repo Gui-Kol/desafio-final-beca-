@@ -4,7 +4,7 @@ import com.nttdata.application.usecases.client.DeleteClient;
 import com.nttdata.application.usecases.client.ListClients;
 import com.nttdata.application.usecases.client.RegisterClientRoleClient;
 import com.nttdata.application.usecases.client.UpdateClient;
-import com.nttdata.domain.client.ClientFabric;
+import com.nttdata.domain.client.ClientFactory;
 import com.nttdata.infra.controller.dtos.client.ClientDto;
 import com.nttdata.infra.controller.dtos.client.ClientUpdateDto;
 import jakarta.validation.Valid;
@@ -16,14 +16,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("/clients")
 public class ClientController {
     private final ListClients listClients;
-    private final ClientFabric clientFabric;
+    private final ClientFactory clientFactory;
     private final RegisterClientRoleClient registerClientRoleClient;
     private final DeleteClient deleteClient;
     private final UpdateClient updateClient;
 
-    public ClientController(ListClients listClients, ClientFabric clientFabric, RegisterClientRoleClient registerClientRoleClient, DeleteClient deleteClient, UpdateClient updateClient) {
+    public ClientController(ListClients listClients, ClientFactory clientFactory, RegisterClientRoleClient registerClientRoleClient, DeleteClient deleteClient, UpdateClient updateClient) {
         this.listClients = listClients;
-        this.clientFabric = clientFabric;
+        this.clientFactory = clientFactory;
         this.registerClientRoleClient = registerClientRoleClient;
         this.deleteClient = deleteClient;
         this.updateClient = updateClient;
@@ -39,7 +39,7 @@ public class ClientController {
     @PostMapping
     public ResponseEntity<?> registerClient(@RequestBody @Valid ClientDto dto, UriComponentsBuilder builder) {
 
-        var clientToRegister = clientFabric.fabric(dto.name(), dto.email(), dto.username(), dto.password(), dto.cpf(), dto.birthDay(), dto.telephone(),
+        var clientToRegister = clientFactory.factory(dto.name(), dto.email(), dto.username(), dto.password(), dto.cpf(), dto.birthDay(), dto.telephone(),
                 dto.address().street(), dto.address().number(), dto.address().addressDetails(), dto.address().neighborhood(), dto.address().city(),
                 dto.address().state(), dto.address().postcode(), dto.address().country());
 
@@ -58,7 +58,7 @@ public class ClientController {
     @PutMapping("/{id}")
     public ResponseEntity updateClient(@RequestBody ClientUpdateDto dto, @PathVariable Long id) {
 
-        var client = clientFabric.fabric(dto.name(), dto.email(), dto.username(), dto.password(), dto.cpf(), dto.birthDay(), dto.telephone(),
+        var client = clientFactory.factory(dto.name(), dto.email(), dto.username(), dto.password(), dto.cpf(), dto.birthDay(), dto.telephone(),
                 dto.address().street(), dto.address().number(), dto.address().addressDetails(), dto.address().neighborhood(), dto.address().city(),
                 dto.address().state(), dto.address().postcode(), dto.address().country());
 

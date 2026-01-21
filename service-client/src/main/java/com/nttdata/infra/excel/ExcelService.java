@@ -2,7 +2,7 @@ package com.nttdata.infra.excel;
 
 import com.nttdata.application.repository.ClientRepository;
 import com.nttdata.domain.client.Client;
-import com.nttdata.domain.client.ClientFabric;
+import com.nttdata.domain.client.ClientFactory;
 import com.nttdata.infra.excel.usecases.GetCellValueAsLocalDate;
 import com.nttdata.infra.excel.usecases.GetCellValueAsString;
 import com.nttdata.infra.excel.usecases.IsRowEmpty;
@@ -23,14 +23,14 @@ import java.util.List;
 
 @Service
 public class ExcelService {
-    private final ClientFabric clientFabric;
+    private final ClientFactory clientFactory;
     private final ClientRepository clientRepository;
     private final GetCellValueAsString getCellValueAsString;
     private final IsRowEmpty isRowEmpty;
     private final GetCellValueAsLocalDate getCellValueAsLocalDate;
 
-    public ExcelService(ClientFabric clientFabric, ClientRepository clientRepository, GetCellValueAsString getCellValueAsString, IsRowEmpty isRowEmpty, GetCellValueAsLocalDate getCellValueAsLocalDate) {
-        this.clientFabric = clientFabric;
+    public ExcelService(ClientFactory clientFactory, ClientRepository clientRepository, GetCellValueAsString getCellValueAsString, IsRowEmpty isRowEmpty, GetCellValueAsLocalDate getCellValueAsLocalDate) {
+        this.clientFactory = clientFactory;
         this.clientRepository = clientRepository;
         this.getCellValueAsString = getCellValueAsString;
         this.isRowEmpty = isRowEmpty;
@@ -87,7 +87,7 @@ public class ExcelService {
                     String postcode = getCellValueAsString.get(currentRow.getCell(13));
                     String country = getCellValueAsString.get(currentRow.getCell(14));
 
-                    Client client = clientFabric.fabric(name, email, username, password, cpf, birthDay, telephone, street, number, addressDetails, neighborhood, city, state, postcode, country);
+                    Client client = clientFactory.factory(name, email, username, password, cpf, birthDay, telephone, street, number, addressDetails, neighborhood, city, state, postcode, country);
 
                     if (name.isEmpty() || email.isEmpty() || cpf.isEmpty()) {
                         System.err.println("Erro na linha " + rowNum + ": Nome, Email ou CPF não podem ser vazios. Cliente '" + name + "' ignorado.");
