@@ -1,6 +1,8 @@
 package com.nttdata.configs;
 
+import com.nttdata.application.repository.ClientRepository;
 import com.nttdata.application.repository.RoleRepository;
+import com.nttdata.application.usecase.client.SetClientActive;
 import com.nttdata.application.usecase.role.DeleteRoleClient;
 import com.nttdata.application.usecase.role.FindRoleByClientId;
 import com.nttdata.application.usecase.role.RegisterRoleClient;
@@ -37,4 +39,9 @@ public class RoleConfig {
     public UpdateClientRole updateClientRole(RoleRepository repository){
         return new UpdateClientRole(repository);
     }
+    @Bean
+    public SetClientActive setClientActive(ClientRepository repository){
+        return new SetClientActive(repository);
+    }
 }
+

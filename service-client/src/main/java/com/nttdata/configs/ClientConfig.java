@@ -57,4 +57,8 @@ public class ClientConfig {
     public ExistsClient existsClient(ClientRepository repository){
         return new ExistsClient(repository);
     }
+    @Bean
+    public VerifyClientActive verifyClientActive(ClientRepository repository){
+        return new VerifyClientActive(repository);
+    }
 }

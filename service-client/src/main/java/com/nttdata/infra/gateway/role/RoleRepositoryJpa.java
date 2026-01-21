@@ -15,6 +15,7 @@ public class RoleRepositoryJpa implements RoleRepository {
         this.mapper = mapper;
     }
 
+
     @Override
     public Role registerRoleClient(Role role) {
         var roleSaved = repository.save(mapper.toRoleEntity(role));
@@ -36,7 +37,7 @@ public class RoleRepositoryJpa implements RoleRepository {
     @Override
     public Role updateClientRole(Long clientId, RoleName roleName) {
         RoleEntity entity = repository.findByClientId(clientId);
-        entity.update(entity.getClientId(),roleName);
+        entity.update(entity.getClientId(), roleName);
         repository.save(entity);
         return mapper.toRole(repository.findByClientId(clientId));
     }

@@ -19,20 +19,27 @@ public class ClientController {
     private final DeleteClient deleteClient;
     private final UpdateClient updateClient;
     private final ExistsClient existsClient;
+    private final VerifyClientActive verifyClientActive;
 
-    public ClientController(ListClients listClients, ClientFactory clientFactory, RegisterClientRoleClient registerClientRoleClient, DeleteClient deleteClient, UpdateClient updateClient, ExistsClient existsClient) {
+    public ClientController(ListClients listClients, ClientFactory clientFactory, RegisterClientRoleClient registerClientRoleClient, DeleteClient deleteClient, UpdateClient updateClient, ExistsClient existsClient, VerifyClientActive verifyClientActive) {
         this.listClients = listClients;
         this.clientFactory = clientFactory;
         this.registerClientRoleClient = registerClientRoleClient;
         this.deleteClient = deleteClient;
         this.updateClient = updateClient;
         this.existsClient = existsClient;
+        this.verifyClientActive = verifyClientActive;
     }
 
     @GetMapping("/{id}/exists")
     public ResponseEntity<Boolean> checkClientExists(@PathVariable Long id) {
         boolean exists = existsClient.byId(id);
-        return new ResponseEntity<>(exists, HttpStatus.OK);
+        boolean active = verifyClientActive.verifyById(id);
+        boolean response;
+        if (exists && active){
+            response = true;
+        }else{response = false;}
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 

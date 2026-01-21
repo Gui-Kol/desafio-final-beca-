@@ -15,7 +15,12 @@ public class TransactionController {
 
     @PostMapping("/{sourceAccountId}")
     public ResponseEntity pay(@PathVariable Long sourceAccountId){
-           pay.transaction(sourceAccountId);
-           return ResponseEntity.ok("Teste");
+        try {
+            var response = pay.transaction(sourceAccountId);
+            return ResponseEntity.ok("True");
+        }catch (RuntimeException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 }

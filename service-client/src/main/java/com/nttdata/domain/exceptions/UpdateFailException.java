@@ -1,4 +1,4 @@
-package com.nttdata.infra.exceptions;
+package com.nttdata.domain.exceptions;
 
 public class UpdateFailException extends RuntimeException {
     public UpdateFailException(String message) {

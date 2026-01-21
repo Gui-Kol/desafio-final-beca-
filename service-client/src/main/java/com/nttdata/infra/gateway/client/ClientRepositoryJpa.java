@@ -9,6 +9,7 @@ import com.nttdata.domain.role.RoleName;
 import com.nttdata.infra.persistence.client.ClientEntity;
 import com.nttdata.infra.persistence.client.ClientRepositoryEntity;
 import jakarta.transaction.Transactional;
+import org.hibernate.ObjectNotFoundException;
 
 import java.util.List;
 
@@ -72,5 +73,22 @@ public class ClientRepositoryJpa implements ClientRepository {
     @Override
     public boolean existsClientByid(Long id) {
         return entityRepository.existsById(id);
+    }
+
+    @Override
+    public boolean verifyActive(Long id) {
+        try {
+            var entity = entityRepository.getReferenceById(id);
+            return entity.isActive();
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    @Override
+    public void setClientActive(Long id, boolean active) {
+        var entity = entityRepository.getReferenceById(id);
+        entity.setActive(active);
+        entityRepository.save(entity);
     }
 }

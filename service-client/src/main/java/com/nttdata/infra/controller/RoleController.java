@@ -1,5 +1,6 @@
 package com.nttdata.infra.controller;
 
+import com.nttdata.application.usecase.client.SetClientActive;
 import com.nttdata.application.usecase.role.FindRoleByClientId;
 import com.nttdata.application.usecase.role.UpdateClientRole;
 import com.nttdata.domain.role.Role;
@@ -13,10 +14,12 @@ import org.springframework.web.bind.annotation.*;
 public class RoleController {
     private final FindRoleByClientId findRoleByClientId;
     private final UpdateClientRole updateClientRole;
+    private final SetClientActive setClientActive;
 
-    public RoleController(FindRoleByClientId findRoleByClientId, UpdateClientRole updateClientRole) {
+    public RoleController(FindRoleByClientId findRoleByClientId, UpdateClientRole updateClientRole, SetClientActive setClientActive) {
         this.findRoleByClientId = findRoleByClientId;
         this.updateClientRole = updateClientRole;
+        this.setClientActive = setClientActive;
     }
 
     @GetMapping("/{id}")
@@ -30,6 +33,7 @@ public class RoleController {
     public ResponseEntity updateClientRole(@RequestBody UpdateRoleDto dto) {
         System.out.println(dto.clientId() + dto.roleName().name());
         var activateClient = updateClientRole.update(dto.clientId(), dto.roleName());
+        setClientActive.set(dto.clientId(), true);
         return ResponseEntity.ok(activateClient);
     }
 

@@ -17,4 +17,8 @@ public interface ClientRepository {
     Client updateClient(Client client, Long id);
 
     boolean existsClientByid(Long id);
+
+    boolean verifyActive(Long id);
+
+    void setClientActive(Long id, boolean active);
 }
