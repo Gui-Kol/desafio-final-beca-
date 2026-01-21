@@ -1,9 +1,24 @@
-package com.nttdata.domain;
+package com.nttdata.infra.persitence.client;
+
+import com.nttdata.domain.PaymentMethod;
+import com.nttdata.domain.StatusTransaction;
+import com.nttdata.domain.TransactionType;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class Transaction {
+@Table(name = "transactions")
+@Entity(name = "transaction")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(of = "id")
+public class TransactionEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long sourceAccountId;
     private Long destinationAccountId;
@@ -16,6 +31,5 @@ public class Transaction {
     private StatusTransaction status;
     private TransactionType type;
     private PaymentMethod method;
-
 
 }

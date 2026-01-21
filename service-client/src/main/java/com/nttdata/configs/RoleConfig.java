@@ -1,10 +1,10 @@
 package com.nttdata.configs;
 
 import com.nttdata.application.repository.RoleRepository;
-import com.nttdata.application.usecases.role.DeleteRoleClient;
-import com.nttdata.application.usecases.role.FindRoleByClientId;
-import com.nttdata.application.usecases.role.RegisterRoleClient;
-import com.nttdata.application.usecases.role.UpdateClientRole;
+import com.nttdata.application.usecase.role.DeleteRoleClient;
+import com.nttdata.application.usecase.role.FindRoleByClientId;
+import com.nttdata.application.usecase.role.RegisterRoleClient;
+import com.nttdata.application.usecase.role.UpdateClientRole;
 import com.nttdata.infra.gateway.role.RoleMapper;
 import com.nttdata.infra.gateway.role.RoleRepositoryJpa;
 import com.nttdata.infra.persistence.role.RoleRepositoryEntity;

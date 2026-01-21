@@ -1,9 +1,9 @@
 package com.nttdata.configs;
 
 import com.nttdata.application.repository.ClientRepository;
-import com.nttdata.application.usecases.client.*;
-import com.nttdata.application.usecases.role.DeleteRoleClient;
-import com.nttdata.application.usecases.role.RegisterRoleClient;
+import com.nttdata.application.usecase.client.*;
+import com.nttdata.application.usecase.role.DeleteRoleClient;
+import com.nttdata.application.usecase.role.RegisterRoleClient;
 import com.nttdata.domain.client.ClientFactory;
 import com.nttdata.infra.gateway.address.AddressMapper;
 import com.nttdata.infra.gateway.client.ClientMapper;
@@ -52,5 +52,9 @@ public class ClientConfig {
     @Bean
     public ClientFactory clientFabric(){
         return new ClientFactory();
+    }
+    @Bean
+    public ExistsClient existsClient(ClientRepository repository){
+        return new ExistsClient(repository);
     }
 }

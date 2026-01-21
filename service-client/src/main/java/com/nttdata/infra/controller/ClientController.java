@@ -1,13 +1,11 @@
 package com.nttdata.infra.controller;
 
-import com.nttdata.application.usecases.client.DeleteClient;
-import com.nttdata.application.usecases.client.ListClients;
-import com.nttdata.application.usecases.client.RegisterClientRoleClient;
-import com.nttdata.application.usecases.client.UpdateClient;
+import com.nttdata.application.usecase.client.*;
 import com.nttdata.domain.client.ClientFactory;
 import com.nttdata.infra.controller.dtos.client.ClientDto;
 import com.nttdata.infra.controller.dtos.client.ClientUpdateDto;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -20,13 +18,21 @@ public class ClientController {
     private final RegisterClientRoleClient registerClientRoleClient;
     private final DeleteClient deleteClient;
     private final UpdateClient updateClient;
+    private final ExistsClient existsClient;
 
-    public ClientController(ListClients listClients, ClientFactory clientFactory, RegisterClientRoleClient registerClientRoleClient, DeleteClient deleteClient, UpdateClient updateClient) {
+    public ClientController(ListClients listClients, ClientFactory clientFactory, RegisterClientRoleClient registerClientRoleClient, DeleteClient deleteClient, UpdateClient updateClient, ExistsClient existsClient) {
         this.listClients = listClients;
         this.clientFactory = clientFactory;
         this.registerClientRoleClient = registerClientRoleClient;
         this.deleteClient = deleteClient;
         this.updateClient = updateClient;
+        this.existsClient = existsClient;
+    }
+
+    @GetMapping("/{id}/exists")
+    public ResponseEntity<Boolean> checkClientExists(@PathVariable Long id) {
+        boolean exists = existsClient.byId(id);
+        return new ResponseEntity<>(exists, HttpStatus.OK);
     }
 
 

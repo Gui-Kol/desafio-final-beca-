@@ -1,7 +1,7 @@
 package com.nttdata.infra.controller;
 
-import com.nttdata.application.usecases.role.FindRoleByClientId;
-import com.nttdata.application.usecases.role.UpdateClientRole;
+import com.nttdata.application.usecase.role.FindRoleByClientId;
+import com.nttdata.application.usecase.role.UpdateClientRole;
 import com.nttdata.domain.role.Role;
 import com.nttdata.infra.controller.dtos.role.UpdateRoleDto;
 import com.nttdata.infra.controller.dtos.role.RoleDto;

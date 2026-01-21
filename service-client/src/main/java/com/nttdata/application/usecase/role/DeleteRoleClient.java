@@ -1,7 +1,6 @@
-package com.nttdata.application.usecases.role;
+package com.nttdata.application.usecase.role;
 
 import com.nttdata.application.repository.RoleRepository;
-import com.nttdata.domain.role.Role;
 
 public class DeleteRoleClient {
     private final RoleRepository repository;

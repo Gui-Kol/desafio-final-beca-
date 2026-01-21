@@ -1,8 +1,8 @@
 package com.nttdata.infra.gateway.client;
 
 import com.nttdata.application.repository.ClientRepository;
-import com.nttdata.application.usecases.role.DeleteRoleClient;
-import com.nttdata.application.usecases.role.RegisterRoleClient;
+import com.nttdata.application.usecase.role.DeleteRoleClient;
+import com.nttdata.application.usecase.role.RegisterRoleClient;
 import com.nttdata.domain.client.Client;
 import com.nttdata.domain.role.Role;
 import com.nttdata.domain.role.RoleName;
@@ -67,5 +67,10 @@ public class ClientRepositoryJpa implements ClientRepository {
         ClientEntity oldEntity = entityRepository.getReferenceById(id);
         oldEntity.update(client);
         return clientMapper.toClient(entityRepository.getReferenceById(id));
+    }
+
+    @Override
+    public boolean existsClientByid(Long id) {
+        return entityRepository.existsById(id);
     }
 }

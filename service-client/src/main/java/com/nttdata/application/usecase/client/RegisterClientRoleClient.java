@@ -1,4 +1,4 @@
-package com.nttdata.application.usecases.client;
+package com.nttdata.application.usecase.client;
 
 import com.nttdata.application.repository.ClientRepository;
 import com.nttdata.domain.client.Client;

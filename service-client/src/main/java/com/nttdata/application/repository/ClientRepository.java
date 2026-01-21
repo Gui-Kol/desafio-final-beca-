@@ -15,4 +15,6 @@ public interface ClientRepository {
     void deleteClient(Long id);
 
     Client updateClient(Client client, Long id);
+
+    boolean existsClientByid(Long id);
 }
