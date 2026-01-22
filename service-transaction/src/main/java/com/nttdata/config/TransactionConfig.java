@@ -1,5 +1,7 @@
 package com.nttdata.config;
 
+import com.nttdata.application.repository.TransactionRepository;
+import com.nttdata.application.usecase.CancelTransaction;
 import com.nttdata.application.usecase.TransactionCase;
 import com.nttdata.domain.transaction.TransactionFactory;
 import com.nttdata.infra.gateway.TransactionMapper;
@@ -22,13 +24,20 @@ public class TransactionConfig {
                                                   TransactionMapper mapper, KafkaTemplate kafkaTemplate) {
         return new TransactionRepositoryJpa(clientValidationService, repository, mapper, kafkaTemplate);
     }
+
     @Bean
-    public TransactionFactory transactionFactory(){
+    public TransactionFactory transactionFactory() {
         return new TransactionFactory();
     }
+
     @Bean
-    public TransactionMapper transactionMapper(){
+    public TransactionMapper transactionMapper() {
         return new TransactionMapper();
+    }
+
+    @Bean
+    public CancelTransaction cancelTransaction(TransactionRepository repository) {
+        return new CancelTransaction(repository);
     }
 
 }

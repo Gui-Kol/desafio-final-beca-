@@ -35,6 +35,9 @@ public class ApplyExchangeRateService {
                 if (ptaxFechamentoOpt.isPresent()) {
                     ExchangeRateDto ptaxDto = ptaxFechamentoOpt.get();
 
+                    BigDecimal saleQuotation = ptaxDto.saleQuotation(); //"cotacao_venda"
+                    BigDecimal saleParity = ptaxDto.saleParity(); //"paridade_venda"
+                    BigDecimal purchaseParity = ptaxDto.purchaseParity(); //"paridade_compra"
                     BigDecimal purchaseQuotation = ptaxDto.PurchaseQuotation(); //"cotacao_compra"
 
                     var value = transaction.getValue();

@@ -7,4 +7,6 @@ public interface TransactionRepository {
 
 
     Transaction saveTransactionPending(Transaction transaction);
+
+    Transaction cancelTransaction(Long transactionId);
 }

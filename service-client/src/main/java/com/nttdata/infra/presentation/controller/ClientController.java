@@ -50,7 +50,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<?> registerClient(@RequestBody @Valid ClientDto dto, UriComponentsBuilder builder) {
+    public ResponseEntity registerClient(@RequestBody @Valid ClientDto dto, UriComponentsBuilder builder) {
 
         var clientToRegister = clientFactory.factory(dto.name(), dto.email(), dto.username(), dto.password(), dto.cpf(), dto.birthDay(), dto.telephone(),
                 dto.address().street(), dto.address().number(), dto.address().addressDetails(), dto.address().neighborhood(), dto.address().city(),
@@ -58,7 +58,7 @@ public class ClientController {
 
         var registeredClient = registerClientRoleClient.register(clientToRegister);
         var uri = builder.path("/clients/{id}").buildAndExpand(registeredClient.getId()).toUri();
-        return ResponseEntity.created(uri).body("Client registered successfully: " + registeredClient);
+        return ResponseEntity.created(uri).body(registeredClient);
     }
 
     @DeleteMapping("/{id}")
@@ -76,7 +76,7 @@ public class ClientController {
                 dto.address().state(), dto.address().postcode(), dto.address().country());
 
         var clientUpdated = updateClient.update(client, id);
-        return ResponseEntity.ok("Client updated successfully: " + clientUpdated);
+        return ResponseEntity.ok(clientUpdated);
     }
 
 

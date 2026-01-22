@@ -35,4 +35,7 @@ public class TransactionEntity {
     @Enumerated(EnumType.STRING)
     private PaymentMethod method;
 
+    public void cancelTransaction() {
+        this.status = StatusTransaction.CANCELED;
+    }
 }
