@@ -1,6 +1,6 @@
 package com.nttdata.config;
 
-import com.nttdata.infra.service.ApplyExchangeRateService;
+import com.nttdata.infra.service.brasilapi.ApplyExchangeRateService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;

@@ -1,5 +1,7 @@
 package com.nttdata.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nttdata.infra.service.brasilapi.ApplyExchangeRateService;
+import com.nttdata.infra.service.brasilapi.ExchangeRatePurchase;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
@@ -30,5 +32,9 @@ public class KafkaProducerConfig {
     @Bean
     public ObjectMapper objectMapper(){
         return new ObjectMapper();
+    }
+    @Bean
+    public ExchangeRatePurchase exchangeRatePurchase(ApplyExchangeRateService applyExchangeRateService){
+        return new ExchangeRatePurchase(applyExchangeRateService);
     }
 }

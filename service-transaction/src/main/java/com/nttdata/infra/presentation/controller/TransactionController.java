@@ -5,8 +5,9 @@ import com.nttdata.application.usecase.TransactionCase;
 import com.nttdata.domain.transaction.Transaction;
 import com.nttdata.domain.transaction.TransactionFactory;
 import com.nttdata.infra.presentation.dto.TransactionDto;
-import com.nttdata.infra.service.ApplyExchangeRateService;
+import com.nttdata.infra.service.brasilapi.ApplyExchangeRateService;
 import com.nttdata.infra.service.KafkaTransactionProducer;
+import com.nttdata.infra.service.brasilapi.ExchangeRatePurchase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,16 +17,17 @@ public class TransactionController {
     private final TransactionCase transactionCase;
     private final CancelTransaction cancelTransaction;
     private final TransactionFactory transactionFactory;
-    private final KafkaTransactionProducer kafkaTransactionProducer;
+    private final ExchangeRatePurchase exchangeRatePurchase;
     private final ApplyExchangeRateService applyExchangeRate;
 
-    public TransactionController(TransactionCase transactionCase, CancelTransaction cancelTransaction, TransactionFactory transactionFactory, KafkaTransactionProducer kafkaTransactionProducer, ApplyExchangeRateService applyExchangeRate) {
+    public TransactionController(TransactionCase transactionCase, CancelTransaction cancelTransaction, TransactionFactory transactionFactory, ExchangeRatePurchase exchangeRatePurchase, ApplyExchangeRateService applyExchangeRate) {
         this.transactionCase = transactionCase;
         this.cancelTransaction = cancelTransaction;
         this.transactionFactory = transactionFactory;
-        this.kafkaTransactionProducer = kafkaTransactionProducer;
+        this.exchangeRatePurchase = exchangeRatePurchase;
         this.applyExchangeRate = applyExchangeRate;
     }
+
 
     @PostMapping()
     public ResponseEntity payment(@RequestBody TransactionDto dto) {
@@ -34,7 +36,7 @@ public class TransactionController {
         applyExchangeRate.apply(transaction);
         try {
             var response = transactionCase.transaction(transaction);
-            kafkaTransactionProducer.sendTransactionRequested(response);
+            exchangeRatePurchase.purchase(response);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

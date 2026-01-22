@@ -1,4 +1,4 @@
-package com.nttdata.infra.service;
+package com.nttdata.infra.service.brasilapi;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nttdata.infra.presentation.dto.ExchangeRateDto;
 import java.util.List;
