@@ -1,5 +1,6 @@
 package com.nttdata.config;
 
+import com.nttdata.infra.service.ApplyExchangeRateService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -9,5 +10,9 @@ public class ServiceConfig {
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
+    }
+    @Bean
+    public ApplyExchangeRateService applyExchangeRateService(RestTemplate restTemplate){
+        return new ApplyExchangeRateService(restTemplate);
     }
 }

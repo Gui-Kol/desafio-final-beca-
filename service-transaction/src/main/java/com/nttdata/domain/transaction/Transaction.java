@@ -83,4 +83,16 @@ public class Transaction {
     public PaymentMethod getMethod() {
         return method;
     }
+
+    public void setStatus(StatusTransaction status) {
+        this.status = status;
+    }
+
+    public void setConvertedValue(BigDecimal convertedValue) {
+        this.convertedValue = convertedValue;
+    }
+
+    public void setAppliedExchangeRate(BigDecimal appliedExchangeRate) {
+        this.appliedExchangeRate = appliedExchangeRate;
+    }
 }

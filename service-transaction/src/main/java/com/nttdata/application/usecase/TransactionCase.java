@@ -16,6 +16,7 @@ public class TransactionCase {
         boolean sourceAccountValid = repository.validClient(transaction.getSourceAccountId());
         boolean destinationAccountValid = repository.validClient(transaction.getDestinationAccountId());
         if (sourceAccountValid && destinationAccountValid){
+
             return repository.saveTransactionPending(transaction);
 
         }else {
