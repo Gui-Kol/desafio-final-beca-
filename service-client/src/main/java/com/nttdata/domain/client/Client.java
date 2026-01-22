@@ -37,6 +37,8 @@ public class Client {
         this.lastLoginDate = loginDate;
     }
 
+    public Client() {}
+
     public Long getId() {
         return id;
     }
@@ -89,20 +91,56 @@ public class Client {
         return lastLoginDate;
     }
 
-    public void setLastUpdateDate(LocalDate lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setLastLoginDate(LocalDateTime lastLoginDate) {
-        this.lastLoginDate = lastLoginDate;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public void setBirthDay(LocalDate birthDay) {
+        this.birthDay = birthDay;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setLastUpdateDate(LocalDate lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
     }
 
     public void setActive(boolean active) {
         this.active = active;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setLastLoginDate(LocalDateTime lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
     }
 
     @Override

@@ -18,7 +18,7 @@ public class AddressEntity {
     private String street;
     @Column(name = "address_number")
     private String number;
-    @Column(name = "address_address_details")
+    @Column(name = "address_details")
     private String addressDetails;
     @Column(name = "address_neighborhood")
     private String neighborhood;

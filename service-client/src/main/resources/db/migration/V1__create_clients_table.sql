@@ -1,5 +1,5 @@
 -- V1__create_clients_table.sql
-CREATE TABLE clients (
+CREATE TABLE IF NOT EXISTS clients (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,

@@ -1,6 +1,7 @@
 package com.nttdata.application.usecase.client;
 
 import com.nttdata.application.repository.ClientRepository;
+import com.nttdata.domain.exceptions.ClientInactiveException;
 
 public class DeleteClient {
     private final ClientRepository repository;
@@ -10,7 +11,12 @@ public class DeleteClient {
     }
 
     public void deleteClient(Long id) {
-        repository.deleteClient(id);
+        boolean active = repository.verifyActive(id);
+        if (active) {
+            repository.deleteClient(id);
+        }else {
+            throw new ClientInactiveException("Client already inactive!");
+        }
     }
 
 }
