@@ -1,7 +1,7 @@
 package com.nttdata.infra.service.brasilapi;
 
 import com.nttdata.domain.transaction.Transaction;
-import com.nttdata.infra.presentation.dto.ExchangeRateDto;
+import com.nttdata.infra.presentation.dto.transaction.ExchangeRateDto;
 
 import java.math.BigDecimal;
 
@@ -23,16 +23,10 @@ public class ExchangeRatePurchase {
                     .multiply(purchaseQuotation);
             transaction.setConvertedValue(result);
             transaction.setAppliedExchangeRate(purchaseQuotation);
-
-            return transaction;
         }else {
-            return transaction;
+            transaction.setConvertedValue(transaction.getValue());
+            transaction.setAppliedExchangeRate(BigDecimal.valueOf(1));
         }
-
-
+        return transaction;
     }
-
-
-
-
 }

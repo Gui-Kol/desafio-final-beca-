@@ -1,7 +1,7 @@
 package com.nttdata.infra.service.brasilapi;
 
 import com.nttdata.domain.transaction.Transaction;
-import com.nttdata.infra.presentation.dto.ExchangeRateDto;
+import com.nttdata.infra.presentation.dto.transaction.ExchangeRateDto;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,7 +23,6 @@ public class ApplyExchangeRateService {
             String url = "https://brasilapi.com.br/api/cambio/v1/cotacao/" + currency + "/" + date;
 
             try {
-
                 BrasilApiExchangeRateResponse response = restTemplate.getForObject(url, BrasilApiExchangeRateResponse.class);
 
                 if (response != null && response.getCotacoes() != null && !response.getCotacoes().isEmpty()) {
@@ -34,10 +33,10 @@ public class ApplyExchangeRateService {
                     if (ptaxFechamentoOpt.isPresent()) {
                         return ptaxFechamentoOpt.get();
                     } else {
-                        System.out.println("'PTAX CLOSING' quote not found in the API response for the currency " + currency + " in date " + date);
+                        throw new RuntimeException("'PTAX CLOSING' quote not found in the API response for the currency " + currency + " in date " + date);
                     }
                 } else {
-                    System.out.println("Empty exchange API response or no quotes for the currency " + currency + " in date " + date);
+                    throw new RuntimeException("Empty exchange API response or no quotes for the currency " + currency + " in date " + date);
                 }
             } catch (RestClientException e) {
                 throw new RuntimeException("Error calling the exchange API for " + currency + " in " + date + ": " + e.getMessage());

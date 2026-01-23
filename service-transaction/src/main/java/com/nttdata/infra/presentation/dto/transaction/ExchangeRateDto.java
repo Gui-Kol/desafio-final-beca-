@@ -1,4 +1,4 @@
-package com.nttdata.infra.presentation.dto;
+package com.nttdata.infra.presentation.dto.transaction;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

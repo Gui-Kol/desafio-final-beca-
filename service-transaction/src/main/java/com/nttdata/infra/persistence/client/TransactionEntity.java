@@ -1,4 +1,4 @@
-package com.nttdata.infra.persitence.client;
+package com.nttdata.infra.persistence.client;
 
 import com.nttdata.domain.transaction.attribute.PaymentMethod;
 import com.nttdata.domain.transaction.attribute.StatusTransaction;

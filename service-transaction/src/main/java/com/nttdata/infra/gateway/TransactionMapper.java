@@ -1,7 +1,7 @@
 package com.nttdata.infra.gateway;
 
 import com.nttdata.domain.transaction.Transaction;
-import com.nttdata.infra.persitence.client.TransactionEntity;
+import com.nttdata.infra.persistence.client.TransactionEntity;
 
 public class TransactionMapper {
 

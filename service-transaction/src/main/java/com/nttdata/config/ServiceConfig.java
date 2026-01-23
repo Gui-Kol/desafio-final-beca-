@@ -1,6 +1,7 @@
 package com.nttdata.config;
 
 import com.nttdata.infra.service.brasilapi.ApplyExchangeRateService;
+import com.nttdata.infra.service.pdf.PdfGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -15,4 +16,9 @@ public class ServiceConfig {
     public ApplyExchangeRateService applyExchangeRateService(RestTemplate restTemplate){
         return new ApplyExchangeRateService(restTemplate);
     }
+    @Bean
+    public PdfGenerator pdfGenerator(){
+        return new PdfGenerator();
+    }
+
 }

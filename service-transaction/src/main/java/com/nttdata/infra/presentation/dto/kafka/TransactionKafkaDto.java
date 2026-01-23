@@ -1,4 +1,4 @@
-package com.nttdata.infra.presentation.dto;
+package com.nttdata.infra.presentation.dto.kafka;
 
 import com.nttdata.domain.transaction.attribute.PaymentMethod;
 import com.nttdata.domain.transaction.attribute.StatusTransaction;

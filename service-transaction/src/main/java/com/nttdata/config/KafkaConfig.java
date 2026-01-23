@@ -2,6 +2,7 @@ package com.nttdata.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nttdata.infra.service.brasilapi.ApplyExchangeRateService;
 import com.nttdata.infra.service.brasilapi.ExchangeRatePurchase;
+import com.nttdata.infra.service.kafka.KafkaCancelTransactionProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class KafkaProducerConfig {
+public class KafkaConfig {
 
     @Bean
     public ProducerFactory<String, String> producerFactory() {
@@ -36,5 +37,9 @@ public class KafkaProducerConfig {
     @Bean
     public ExchangeRatePurchase exchangeRatePurchase(ApplyExchangeRateService applyExchangeRateService){
         return new ExchangeRatePurchase(applyExchangeRateService);
+    }
+    @Bean
+    public KafkaCancelTransactionProducer kafkaCancelTransactionProducer(KafkaTemplate kafkaTemplate, ObjectMapper objectMapper){
+        return new KafkaCancelTransactionProducer(kafkaTemplate, objectMapper);
     }
 }

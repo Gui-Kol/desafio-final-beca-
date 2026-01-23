@@ -4,24 +4,29 @@ import com.nttdata.application.repository.TransactionRepository;
 import com.nttdata.domain.transaction.Transaction;
 import com.nttdata.domain.transaction.attribute.PaymentMethod;
 import com.nttdata.domain.transaction.attribute.StatusTransaction;
-import com.nttdata.infra.persitence.client.TransactionRepositoryEntity;
+import com.nttdata.infra.persistence.client.TransactionEntity;
+import com.nttdata.infra.persistence.client.TransactionRepositoryEntity;
 import com.nttdata.infra.service.ClientValidationService;
-import org.springframework.kafka.core.KafkaTemplate;
+import com.nttdata.infra.service.pdf.PdfGenerator;
 
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TransactionRepositoryJpa implements TransactionRepository {
     private final ClientValidationService clientValidationService;
     private final TransactionRepositoryEntity repositoryEntity;
+    private final PdfGenerator pdfGenerator;
     private final TransactionMapper mapper;
-    private final KafkaTemplate<String, Transaction> kafkaTemplate;
 
-    public TransactionRepositoryJpa(ClientValidationService clientValidationService, TransactionRepositoryEntity repositoryEntity, TransactionMapper mapper, KafkaTemplate kafkaTemplate) {
+    public TransactionRepositoryJpa(ClientValidationService clientValidationService, TransactionRepositoryEntity repositoryEntity, PdfGenerator pdfGeneretor, TransactionMapper mapper) {
         this.clientValidationService = clientValidationService;
         this.repositoryEntity = repositoryEntity;
+        this.pdfGenerator = pdfGeneretor;
         this.mapper = mapper;
-        this.kafkaTemplate = kafkaTemplate;
     }
+
 
     @Override
     public boolean validClient(Long sourceAccountId) {
@@ -33,34 +38,56 @@ public class TransactionRepositoryJpa implements TransactionRepository {
     @Override
     public Transaction saveTransactionPending(Transaction transaction) {
         if (!transaction.getMethod().equals(PaymentMethod.CASH)) {
-            if (transaction.getCurrency().equals("BRL")){
-                transaction.setConvertedValue(transaction.getValue());
-                transaction.setAppliedExchangeRate(BigDecimal.valueOf(1));
-            }
             var response = repositoryEntity.save(mapper.toTransactionEntity(transaction));
             return mapper.toTransaction(response);
-        }else {
+        } else {
             return saveTransactionCompleted(transaction);
         }
     }
 
     @Override
     public Transaction cancelTransaction(Long transactionId) {
-        if (repositoryEntity.existsById(transactionId)){
+        if (repositoryEntity.existsById(transactionId)) {
             var entity = repositoryEntity.getReferenceById(transactionId);
 
-            if (entity.getMethod().equals(PaymentMethod.CASH)){
+            if (entity.getMethod().equals(PaymentMethod.CASH)) {
                 throw new RuntimeException("It is not possible to cancel a transaction made in cash!");
             }
 
             entity.cancelTransaction();
             return mapper.toTransaction(repositoryEntity.save(entity));
-        }else {
+        } else {
             throw new RuntimeException("There is no transition with this ID " + transactionId);
         }
     }
 
-    private Transaction saveTransactionCompleted(Transaction transaction){
+    @Override
+    public List<Transaction> listByClientId(Long clientId) {
+        if (repositoryEntity.existsBySourceAccountId(clientId) || repositoryEntity.existsByDestinationAccountId(clientId)) {
+            LocalDateTime timeLimit = LocalDateTime.now().minusHours(24);
+
+            List<TransactionEntity> listDestinationAccountId = repositoryEntity.findByDestinationAccountId(clientId);
+            List<TransactionEntity> response = repositoryEntity.findBySourceAccountId(clientId);
+
+            response.addAll(listDestinationAccountId);
+
+            return response.stream()
+                    .filter(e -> e.getTransactionDate().isAfter(timeLimit))
+                    .sorted(Comparator.comparing(TransactionEntity::getTransactionDate).reversed())
+                    .map(mapper::toTransaction)
+                    .collect(Collectors.toList());
+        } else {
+            throw new RuntimeException("The client with ID " + clientId + " does not exist!");
+        }
+    }
+
+    @Override
+    public void createPdf(Long clientId) {
+        List<Transaction> list = listByClientId(clientId);
+        pdfGenerator.generate(list);
+    }
+
+    private Transaction saveTransactionCompleted(Transaction transaction) {
         transaction.setStatus(StatusTransaction.COMPLETED);
         var response = repositoryEntity.save(mapper.toTransactionEntity(transaction));
         return mapper.toTransaction(response);

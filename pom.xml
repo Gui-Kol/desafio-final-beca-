@@ -24,6 +24,7 @@
     <modules>
         <module>service-client</module>
         <module>service-transaction</module>
+        <module>service-transaction-processor</module>
     </modules>
     <scm>
         <connection/>
