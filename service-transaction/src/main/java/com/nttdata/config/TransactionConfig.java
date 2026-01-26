@@ -13,8 +13,11 @@ import com.nttdata.infra.service.ClientValidationService;
 import com.nttdata.infra.service.brasilapi.ApplyExchangeRateService;
 import com.nttdata.infra.service.brasilapi.ExchangeRatePurchase;
 import com.nttdata.infra.service.pdf.PdfGenerator;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class TransactionConfig {
@@ -24,7 +27,7 @@ public class TransactionConfig {
     }
 
     @Bean
-    public TransactionRepositoryJpa repositoryJpa(ClientValidationService clientValidationService, TransactionRepositoryEntity repository,
+    public TransactionRepositoryJpa jpaRepository(ClientValidationService clientValidationService, TransactionRepositoryEntity repository,
                                                   PdfGenerator pdfGenerator, TransactionMapper mapper) {
         return new TransactionRepositoryJpa(clientValidationService, repository, pdfGenerator ,mapper);
     }

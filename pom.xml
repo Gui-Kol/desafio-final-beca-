@@ -25,7 +25,6 @@
         <module>service-client</module>
         <module>service-transaction</module>
         <module>service-transaction-processor</module>
-        <module>service-common-security-token</module>
     </modules>
     <scm>
         <connection/>
@@ -37,6 +36,8 @@
         <java.version>17</java.version>
     </properties>
     <dependencies>
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>

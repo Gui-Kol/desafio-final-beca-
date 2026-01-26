@@ -28,6 +28,7 @@ public class SecurityConfiguration {
                         .authorizeHttpRequests(req -> {
                             req.requestMatchers("/login").permitAll();
                             req.requestMatchers("/clients/import").permitAll();
+                            req.requestMatchers("/clients/{id}/exists").permitAll();
                             req.anyRequest().authenticated();
                         })
                         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
