@@ -21,6 +21,9 @@ public class Transaction {
     private TransactionType type;
     private PaymentMethod method;
 
+    public Transaction() {
+    }
+
     public Transaction(Long id, Long sourceAccountId, Long destinationAccountId, BigDecimal value, String currency, BigDecimal appliedExchangeRate, BigDecimal convertedValue, String description, LocalDateTime transactionDate, StatusTransaction status, TransactionType type, PaymentMethod method) {
         this.id = id;
         this.sourceAccountId = sourceAccountId;
@@ -94,5 +97,23 @@ public class Transaction {
 
     public void setAppliedExchangeRate(BigDecimal appliedExchangeRate) {
         this.appliedExchangeRate = appliedExchangeRate;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", sourceAccountId=" + sourceAccountId +
+                ", destinationAccountId=" + destinationAccountId +
+                ", value=" + value +
+                ", currency='" + currency + '\'' +
+                ", appliedExchangeRate=" + appliedExchangeRate +
+                ", convertedValue=" + convertedValue +
+                ", description='" + description + '\'' +
+                ", transactionDate=" + transactionDate +
+                ", status=" + status +
+                ", type=" + type +
+                ", method=" + method +
+                '}';
     }
 }

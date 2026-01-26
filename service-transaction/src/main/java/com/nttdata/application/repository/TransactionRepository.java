@@ -15,4 +15,6 @@ public interface TransactionRepository {
     List<Transaction> listByClientId(Long clientId);
 
     void createPdf(Long clientId);
+
+    void update(Transaction trasaction);
 }

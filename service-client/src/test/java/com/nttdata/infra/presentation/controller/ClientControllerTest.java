@@ -131,7 +131,7 @@ class ClientControllerTest {
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getHeaders().getLocation());
-        assertEquals("Client registered successfully: " + mockClient, response.getBody());
+        assertEquals(mockClient, response.getBody());
         verify(clientFactory).factory(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
         verify(registerClientRoleClient).register(clientToRegister);
     }
@@ -166,7 +166,7 @@ class ClientControllerTest {
         ResponseEntity response = clientController.updateClient(mockClientUpdateDto, clientId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Client updated successfully: " + updatedClient, response.getBody());
+        assertEquals(updatedClient, response.getBody());
         verify(clientFactory).factory(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
         verify(updateClient).update(clientDataForUpdate, clientId);
     }

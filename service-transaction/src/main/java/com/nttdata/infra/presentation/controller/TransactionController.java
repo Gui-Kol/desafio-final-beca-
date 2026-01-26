@@ -41,7 +41,7 @@ public class TransactionController {
 
     @PostMapping()
     public ResponseEntity payment(@RequestBody TransactionDto dto) {
-        Transaction transaction = transactionFactory.factory(dto.sourceAccountId(),dto.destinationAccountId(),dto.value(),dto.currency(),dto.description(),
+        Transaction transaction = transactionFactory.factory(null,dto.sourceAccountId(),dto.destinationAccountId(),dto.value(),dto.currency(),dto.description(),
                 dto.type(), dto.method());
         try {
             var response = transactionCase

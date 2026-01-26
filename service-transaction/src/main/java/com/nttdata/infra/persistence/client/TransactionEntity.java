@@ -1,5 +1,6 @@
 package com.nttdata.infra.persistence.client;
 
+import com.nttdata.domain.transaction.Transaction;
 import com.nttdata.domain.transaction.attribute.PaymentMethod;
 import com.nttdata.domain.transaction.attribute.StatusTransaction;
 import com.nttdata.domain.transaction.attribute.TransactionType;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 @EqualsAndHashCode(of = "id")
 public class TransactionEntity {
     @Id
@@ -37,5 +39,9 @@ public class TransactionEntity {
 
     public void cancelTransaction() {
         this.status = StatusTransaction.CANCELED;
+    }
+
+    public void update(Transaction trasaction) {
+            this.status = trasaction.getStatus();
     }
 }

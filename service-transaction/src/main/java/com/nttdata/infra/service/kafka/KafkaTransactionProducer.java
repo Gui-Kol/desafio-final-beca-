@@ -3,7 +3,6 @@ package com.nttdata.infra.service.kafka;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nttdata.domain.transaction.Transaction;
-import com.nttdata.infra.presentation.dto.kafka.CancelTransactionKafkaDto;
 import com.nttdata.infra.presentation.dto.kafka.TransactionKafkaDto;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;

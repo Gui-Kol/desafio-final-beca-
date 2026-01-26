@@ -10,6 +10,8 @@ import com.nttdata.infra.gateway.TransactionMapper;
 import com.nttdata.infra.gateway.TransactionRepositoryJpa;
 import com.nttdata.infra.persistence.client.TransactionRepositoryEntity;
 import com.nttdata.infra.service.ClientValidationService;
+import com.nttdata.infra.service.brasilapi.ApplyExchangeRateService;
+import com.nttdata.infra.service.brasilapi.ExchangeRatePurchase;
 import com.nttdata.infra.service.pdf.PdfGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,5 +51,6 @@ public class TransactionConfig {
     public ListTransactionsPdf listTransactionsPdf(TransactionRepository repository){
         return new ListTransactionsPdf(repository);
     }
+
 
 }

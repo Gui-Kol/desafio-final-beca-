@@ -26,8 +26,7 @@ public class ClientValidationService {
             return exists;
 
         } catch (RestClientException e) {
-            System.err.println("Erro ao se comunicar com o microsserviço de clientes para o ID " + clientId + ": " + e.getMessage());
-            return false;
+            throw new RuntimeException("Error communicating with the client microservice for ID " + clientId + ": " + e.getMessage());
         }
     }
 }

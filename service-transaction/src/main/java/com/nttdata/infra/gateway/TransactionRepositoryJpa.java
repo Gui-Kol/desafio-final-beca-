@@ -37,12 +37,8 @@ public class TransactionRepositoryJpa implements TransactionRepository {
 
     @Override
     public Transaction saveTransactionPending(Transaction transaction) {
-        if (!transaction.getMethod().equals(PaymentMethod.CASH)) {
             var response = repositoryEntity.save(mapper.toTransactionEntity(transaction));
             return mapper.toTransaction(response);
-        } else {
-            return saveTransactionCompleted(transaction);
-        }
     }
 
     @Override
@@ -87,10 +83,10 @@ public class TransactionRepositoryJpa implements TransactionRepository {
         pdfGenerator.generate(list);
     }
 
-    private Transaction saveTransactionCompleted(Transaction transaction) {
-        transaction.setStatus(StatusTransaction.COMPLETED);
-        var response = repositoryEntity.save(mapper.toTransactionEntity(transaction));
-        return mapper.toTransaction(response);
+    public void update(Transaction trasaction) {
+        var entity = repositoryEntity.getReferenceById(trasaction.getId());
+        entity.update(trasaction);
+        repositoryEntity.save(entity);
     }
 
 }
