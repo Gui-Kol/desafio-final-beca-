@@ -7,11 +7,11 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-public class Validate {
+public class ValidateService {
     private final RestTemplate restTemplate;
     private final BankFactory bankFactory;
 
-    public Validate(RestTemplate restTemplate, BankFactory bankFactory) {
+    public ValidateService(RestTemplate restTemplate, BankFactory bankFactory) {
         this.restTemplate = restTemplate;
         this.bankFactory = bankFactory;
     }

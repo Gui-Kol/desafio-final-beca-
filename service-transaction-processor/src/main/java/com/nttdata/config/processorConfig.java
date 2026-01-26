@@ -1,11 +1,14 @@
 package com.nttdata.config;
 
 import com.nttdata.application.repository.TransactionRepository;
+import com.nttdata.application.usecases.processor.Completed;
+import com.nttdata.application.usecases.processor.Faild;
+import com.nttdata.application.usecases.processor.payment.*;
 import com.nttdata.domain.bank.BankFactory;
-import com.nttdata.infra.service.PayBalance;
-import com.nttdata.infra.service.PayCredit;
-import com.nttdata.infra.service.Validate;
-import com.nttdata.infra.service.method.*;
+import com.nttdata.infra.gateway.processor.PayBalance;
+import com.nttdata.infra.gateway.processor.PayCredit;
+import com.nttdata.infra.service.MockApiService;
+import com.nttdata.infra.service.ValidateService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -13,47 +16,47 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class processorConfig {
     @Bean
-    public Boleto boleto(PayBalance payBalance, MockApi mockApi) {
-        return new Boleto(payBalance, mockApi);
+    public Boleto boleto(PayBalance payBalance) {
+        return new Boleto(payBalance);
     }
 
     @Bean
-    public Cash cash(PayBalance payBalance, MockApi mockApi) {
-        return new Cash(payBalance, mockApi);
+    public Cash cash(PayBalance payBalance) {
+        return new Cash(payBalance);
     }
 
     @Bean
-    public DebitCard debitCard(PayBalance payBalance, MockApi mockApi) {
-        return new DebitCard(payBalance, mockApi);
+    public DebitCard debitCard(PayBalance payBalance) {
+        return new DebitCard(payBalance);
     }
 
     @Bean
-    public PayBalance payBalance(Faild faild, Completed completed, MockApi mockApi) {
-        return new PayBalance(faild, completed, mockApi);
+    public PayBalance payBalance(Faild faild, Completed completed, MockApiService mockApiService) {
+        return new PayBalance(faild, completed, mockApiService);
     }
     @Bean
-    public MockApi mockApi(RestTemplate restTemplate, Validate validate){
-        return new MockApi(restTemplate, validate);
-    }
-
-    @Bean
-    public CreditCard creditCard(PayCredit payCredit, Validate validate) {
-        return new CreditCard(payCredit, validate);
+    public MockApiService mockApi(RestTemplate restTemplate, ValidateService validateService){
+        return new MockApiService(restTemplate, validateService);
     }
 
     @Bean
-    public PayCredit payCredit(Faild faild, Completed completed, MockApi mockApi) {
-        return new PayCredit(faild, completed, mockApi);
+    public CreditCard creditCard(PayCredit payCredit) {
+        return new CreditCard(payCredit);
     }
 
     @Bean
-    public Pix pix(PayBalance payBalance, MockApi mockApi) {
-        return new Pix(payBalance, mockApi);
+    public PayCredit payCredit(Faild faild, Completed completed, MockApiService mockApiService) {
+        return new PayCredit(faild, completed, mockApiService);
     }
 
     @Bean
-    public Validate validate(RestTemplate restTemplate, BankFactory bankFactory) {
-        return new Validate(restTemplate, bankFactory);
+    public Pix pix(PayBalance payBalance) {
+        return new Pix(payBalance);
+    }
+
+    @Bean
+    public ValidateService validate(RestTemplate restTemplate, BankFactory bankFactory) {
+        return new ValidateService(restTemplate, bankFactory);
     }
 
     @Bean

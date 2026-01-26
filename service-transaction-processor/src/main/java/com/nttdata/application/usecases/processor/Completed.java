@@ -1,4 +1,4 @@
-package com.nttdata.infra.service.method;
+package com.nttdata.application.usecases.processor;
 
 import com.nttdata.application.repository.TransactionRepository;
 import com.nttdata.domain.transaction.Transaction;

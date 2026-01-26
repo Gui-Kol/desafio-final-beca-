@@ -1,18 +1,17 @@
-package com.nttdata.infra.service.method;
+package com.nttdata.infra.service;
 
 import com.nttdata.domain.bank.Bank;
 import com.nttdata.domain.bank.BankDto;
-import com.nttdata.infra.service.Validate;
 import org.springframework.web.client.RestTemplate;
 
-public class MockApi {
+public class MockApiService {
     private final RestTemplate restTemplate;
-    private final Validate validate;
+    private final ValidateService validateService;
 
 
-    public MockApi(RestTemplate restTemplate, Validate validate) {
+    public MockApiService(RestTemplate restTemplate, ValidateService validateService) {
         this.restTemplate = restTemplate;
-        this.validate = validate;
+        this.validateService = validateService;
     }
 
     public void put(String url, Bank destinationBankUpdated) {
@@ -20,7 +19,7 @@ public class MockApi {
     }
 
     public BankDto get(Long id){
-        return validate.valid(id);
+        return validateService.valid(id);
     }
 
 }

@@ -2,11 +2,11 @@ package com.nttdata.infra.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nttdata.application.usecases.processor.payment.*;
 import com.nttdata.domain.transaction.Transaction;
 import com.nttdata.domain.transaction.TransactionFactory;
 import com.nttdata.domain.transaction.attribute.PaymentMethod;
 import com.nttdata.infra.presentation.dto.kafka.TransactionKafkaDto;
-import com.nttdata.infra.service.method.*;
 import jakarta.transaction.Transactional;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;

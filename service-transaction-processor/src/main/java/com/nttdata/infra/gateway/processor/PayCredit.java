@@ -1,28 +1,31 @@
-package com.nttdata.infra.service;
+package com.nttdata.infra.gateway.processor;
 
+import com.nttdata.application.interfaces.PayCreditInterface;
 import com.nttdata.domain.bank.Bank;
 import com.nttdata.domain.transaction.Transaction;
 import com.nttdata.domain.bank.BankDto;
-import com.nttdata.infra.service.method.Completed;
-import com.nttdata.infra.service.method.Faild;
-import com.nttdata.infra.service.method.MockApi;
+import com.nttdata.application.usecases.processor.Completed;
+import com.nttdata.application.usecases.processor.Faild;
+import com.nttdata.infra.service.MockApiService;
 
-public class PayCredit {
+public class PayCredit implements PayCreditInterface {
     private final Faild faild;
     private final Completed completed;
-    private final MockApi mockApi;
+    private final MockApiService mockApiService;
 
 
     String url = "http://6973d075b5f46f8b5828534e.mockapi.io/mockapi/bank/";
 
-    public PayCredit(Faild faild, Completed completed, MockApi mockApi) {
+    public PayCredit(Faild faild, Completed completed, MockApiService mockApiService) {
         this.faild = faild;
         this.completed = completed;
-        this.mockApi = mockApi;
+        this.mockApiService = mockApiService;
     }
 
 
-    public void purchaseTransfer(Transaction transaction, BankDto sourceBank, BankDto destinationBank) {
+    public void purchaseTransfer(Transaction transaction) {
+        BankDto sourceBank = mockApiService.get(transaction.getSourceAccountId());
+        BankDto destinationBank = mockApiService.get(transaction.getDestinationAccountId());
         var transactionValue = transaction.getValue().doubleValue();
 
         if (sourceBank.credit() >= transactionValue) {
@@ -30,10 +33,10 @@ public class PayCredit {
             var remainingDestination = destinationBank.balance() + transactionValue;
 
             Bank sourceBankUpdated = new Bank(sourceBank.account(), sourceBank.clientId(), sourceBank.balance(), remainingSource, sourceBank.id());
-            mockApi.put(url, sourceBankUpdated);
+            mockApiService.put(url, sourceBankUpdated);
 
             Bank destinationBankUpdated = new Bank(destinationBank.account(), destinationBank.clientId(), remainingDestination, destinationBank.credit(), destinationBank.id());
-            mockApi.put(url, destinationBankUpdated);
+            mockApiService.put(url, destinationBankUpdated);
 
             completed.complete(transaction);
         } else {
