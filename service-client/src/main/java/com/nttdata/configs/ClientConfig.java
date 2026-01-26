@@ -12,6 +12,7 @@ import com.nttdata.infra.gateway.role.RoleMapper;
 import com.nttdata.infra.persistence.client.ClientRepositoryEntity;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class ClientConfig {
@@ -22,9 +23,9 @@ public class ClientConfig {
 
     @Bean
     public ClientRepositoryJpa clientRepositoryJpa(ClientRepositoryEntity repository, ClientMapper mapper, RegisterRoleClient registerRoleClient,
-                                                   DeleteRoleClient deleteRoleClient) {
+                                                   DeleteRoleClient deleteRoleClient, PasswordEncoder passwordEncoder) {
         return new ClientRepositoryJpa(repository, mapper, registerRoleClient,
-                deleteRoleClient);
+                deleteRoleClient, passwordEncoder);
     }
     @Bean
     public ClientMapper clientMapper(AddressMapper addressMapper, RoleMapper roleMapper) {

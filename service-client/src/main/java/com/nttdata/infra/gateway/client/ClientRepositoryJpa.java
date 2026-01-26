@@ -9,7 +9,7 @@ import com.nttdata.domain.role.RoleName;
 import com.nttdata.infra.persistence.client.ClientEntity;
 import com.nttdata.infra.persistence.client.ClientRepositoryEntity;
 import jakarta.transaction.Transactional;
-import org.hibernate.ObjectNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -18,18 +18,20 @@ public class ClientRepositoryJpa implements ClientRepository {
     private final ClientMapper clientMapper;
     private final RegisterRoleClient registerRoleClient;
     private final DeleteRoleClient deleteRoleClient;
+    private final PasswordEncoder passwordEncoder;
 
-    public ClientRepositoryJpa(ClientRepositoryEntity entityRepository, ClientMapper clientMapper, RegisterRoleClient registerRoleClient, DeleteRoleClient deleteRoleClient) {
+    public ClientRepositoryJpa(ClientRepositoryEntity entityRepository, ClientMapper clientMapper, RegisterRoleClient registerRoleClient, DeleteRoleClient deleteRoleClient, PasswordEncoder passwordEncoder) {
         this.entityRepository = entityRepository;
         this.clientMapper = clientMapper;
         this.registerRoleClient = registerRoleClient;
         this.deleteRoleClient = deleteRoleClient;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
     @Override
     public List<Client> clientList() {
-        return  entityRepository.findAll()
+        return entityRepository.findAll()
                 .stream()
                 .map(clientMapper::toClient)
                 .toList();
@@ -38,12 +40,12 @@ public class ClientRepositoryJpa implements ClientRepository {
     @Override
     @Transactional
     public Client registerClientRoleClient(Client domainClient) {
-        System.out.println("Client de domínio recebido para persistência: " + domainClient);
+        domainClient.setPassword(passwordEncoder.encode(domainClient.getPassword()));
 
         ClientEntity savedClientEntity = entityRepository.save(clientMapper.toEntity(domainClient));
 
         domainClient.setId(savedClientEntity.getId());
-        System.out.println("Client de domínio após salvar e obter ID: " + domainClient);
+
         Role domainRole = new Role(domainClient.getId(), RoleName.ROLE_CLIENT);
         registerRoleClient.register(domainRole);
         return domainClient;
@@ -65,6 +67,8 @@ public class ClientRepositoryJpa implements ClientRepository {
     @Override
     @Transactional
     public Client updateClient(Client client, Long id) {
+        client.setPassword(passwordEncoder.encode(client.getPassword()));
+
         ClientEntity oldEntity = entityRepository.getReferenceById(id);
         oldEntity.update(client);
         return clientMapper.toClient(entityRepository.getReferenceById(id));
@@ -80,7 +84,7 @@ public class ClientRepositoryJpa implements ClientRepository {
         try {
             var entity = entityRepository.getReferenceById(id);
             return entity.isActive();
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
