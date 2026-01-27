@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.nttdata.domain.client.Client;
+import com.nttdata.infra.exception.newexception.JwtException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class TokenService {
                     .withExpiresAt(expirationDate())
                     .sign(algorithm);
         } catch (JWTCreationException e) {
-            throw new RuntimeException("Error generating JWT token.", e);
+            throw new JwtException("Error generating JWT token." + e);
         }
     }
 
@@ -39,7 +40,7 @@ public class TokenService {
                     .verify(tokenJWT)
                     .getSubject();
         }catch (JWTVerificationException e){
-            throw new RuntimeException("Invalid or expired JWT token!");
+            throw new JwtException("Invalid or expired JWT token!");
         }
     }
 
@@ -56,7 +57,7 @@ public class TokenService {
                     .verify(tokenJWT)
                     .getSubject();
         } catch (JWTVerificationException e) {
-            throw new RuntimeException("Invalid or expired JWT token", e);
+            throw new JwtException("Invalid or expired JWT token" + e);
         }
     }
 }

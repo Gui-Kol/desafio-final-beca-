@@ -24,10 +24,10 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var tokenJWT = token(request);
 
-        if (tokenJWT != null){
+        if (tokenJWT != null) {
             var subject = tokenService.getsubject(tokenJWT);
-            var client = repository.findByUsername(subject);
 
+            var client = repository.findByUsername(subject);
             var authentication = new UsernamePasswordAuthenticationToken(client, null, client.getAuthorities());
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -38,7 +38,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private String token(HttpServletRequest request) {
         var authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader != null){
+        if (authorizationHeader != null) {
             return authorizationHeader.replace("Bearer ", "");
         }
         return null;

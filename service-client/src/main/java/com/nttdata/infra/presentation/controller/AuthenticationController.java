@@ -1,5 +1,6 @@
 package com.nttdata.infra.presentation.controller;
 
+import com.nttdata.infra.exception.newexception.JwtException;
 import com.nttdata.infra.gateway.client.ClientMapper;
 import com.nttdata.infra.persistence.client.ClientEntity;
 import com.nttdata.infra.presentation.dtos.security.AuthenticationDto;
@@ -30,10 +31,14 @@ public class AuthenticationController {
 
     @PostMapping
     public ResponseEntity login(@RequestBody @Valid AuthenticationDto dto){
-        var token = new UsernamePasswordAuthenticationToken(dto.username(),dto.password());
-        var authentication = authenticationManager.authenticate(token);
-        var tokenJWT = tokenService.generateToken(clientMapper.toClient((ClientEntity) authentication.getPrincipal()));
-        return ResponseEntity.ok(new TokenJWTDto(tokenJWT));
+        try {
+            var token = new UsernamePasswordAuthenticationToken(dto.username(),dto.password());
+            var authentication = authenticationManager.authenticate(token);
+            var tokenJWT = tokenService.generateToken(clientMapper.toClient((ClientEntity) authentication.getPrincipal()));
+            return ResponseEntity.ok(new TokenJWTDto(tokenJWT));
+        }catch (JwtException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }

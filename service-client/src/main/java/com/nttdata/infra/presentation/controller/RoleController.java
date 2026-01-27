@@ -4,6 +4,7 @@ import com.nttdata.application.usecase.client.SetClientActive;
 import com.nttdata.application.usecase.role.FindRoleByClientId;
 import com.nttdata.application.usecase.role.UpdateClientRole;
 import com.nttdata.domain.role.Role;
+import com.nttdata.infra.exception.newexception.ClientNotExistsException;
 import com.nttdata.infra.presentation.dtos.role.UpdateRoleDto;
 import com.nttdata.infra.presentation.dtos.role.RoleDto;
 import org.springframework.http.ResponseEntity;
@@ -24,17 +25,25 @@ public class RoleController {
 
     @GetMapping("/{id}")
     public ResponseEntity listarRoles(@PathVariable Long id) {
-        Role role = findRoleByClientId.find(id);
-        RoleDto roleDto = new RoleDto(role.getClientId(), role.getId(), role.getName());
-        return ResponseEntity.ok(roleDto);
+        try {
+            Role role = findRoleByClientId.find(id);
+            RoleDto roleDto = new RoleDto(role.getClientId(), role.getId(), role.getName());
+            return ResponseEntity.ok(roleDto);
+        }catch (ClientNotExistsException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping
     public ResponseEntity updateClientRole(@RequestBody UpdateRoleDto dto) {
-        System.out.println(dto.clientId() + dto.roleName().name());
-        var activateClient = updateClientRole.update(dto.clientId(), dto.roleName());
-        setClientActive.set(dto.clientId(), true);
-        return ResponseEntity.ok(activateClient);
+        try {
+            var activateClient = updateClientRole.update(dto.clientId(), dto.roleName());
+            setClientActive.set(dto.clientId(), true);
+            return ResponseEntity.ok(activateClient);
+        }catch (ClientNotExistsException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 
 }
