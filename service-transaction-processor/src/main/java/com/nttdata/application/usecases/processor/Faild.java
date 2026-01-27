@@ -1,6 +1,6 @@
 package com.nttdata.application.usecases.processor;
 
-import com.nttdata.application.repository.TransactionRepository;
+import com.nttdata.application.interfaces.TransactionRepository;
 import com.nttdata.domain.transaction.Transaction;
 import com.nttdata.domain.transaction.attribute.StatusTransaction;
 

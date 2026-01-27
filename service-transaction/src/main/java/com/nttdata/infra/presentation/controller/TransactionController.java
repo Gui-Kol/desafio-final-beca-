@@ -77,12 +77,13 @@ public class TransactionController {
     public ResponseEntity listTransactionPdf(@PathVariable Long clientId){
         try {
             pdf.create(clientId);
-            return ResponseEntity.ok("");
+            return ResponseEntity.ok().build();
         }catch (RuntimeException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-
     }
+
+
 
 
 }

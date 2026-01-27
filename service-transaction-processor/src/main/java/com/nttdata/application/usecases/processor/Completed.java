@@ -1,6 +1,6 @@
 package com.nttdata.application.usecases.processor;
 
-import com.nttdata.application.repository.TransactionRepository;
+import com.nttdata.application.interfaces.TransactionRepository;
 import com.nttdata.domain.transaction.Transaction;
 import com.nttdata.domain.transaction.attribute.StatusTransaction;
 
@@ -13,6 +13,7 @@ public class Completed {
 
     public void complete(Transaction transaction) {
         transaction.setStatus(StatusTransaction.COMPLETED);
+        System.out.println(transaction);
         transactionRepository.update(transaction);
     }
 }

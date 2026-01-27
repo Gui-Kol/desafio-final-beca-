@@ -1,10 +1,7 @@
 package com.nttdata.config;
 
 import com.nttdata.application.repository.TransactionRepository;
-import com.nttdata.application.usecase.CancelTransaction;
-import com.nttdata.application.usecase.ListTransactions;
-import com.nttdata.application.usecase.ListTransactionsPdf;
-import com.nttdata.application.usecase.TransactionCase;
+import com.nttdata.application.usecase.*;
 import com.nttdata.domain.transaction.TransactionFactory;
 import com.nttdata.infra.gateway.TransactionMapper;
 import com.nttdata.infra.gateway.TransactionRepositoryJpa;
@@ -30,6 +27,10 @@ public class TransactionConfig {
     public TransactionRepositoryJpa jpaRepository(ClientValidationService clientValidationService, TransactionRepositoryEntity repository,
                                                   PdfGenerator pdfGenerator, TransactionMapper mapper) {
         return new TransactionRepositoryJpa(clientValidationService, repository, pdfGenerator ,mapper);
+    }
+    @Bean
+    public UpdateTransaction updateTransaction(TransactionRepository repository){
+        return new UpdateTransaction(repository);
     }
 
     @Bean

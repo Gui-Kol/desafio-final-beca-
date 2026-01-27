@@ -1,12 +1,13 @@
 package com.nttdata.config;
 
-import com.nttdata.application.repository.TransactionRepository;
+import com.nttdata.application.interfaces.TransactionRepository;
 import com.nttdata.application.usecases.processor.Completed;
 import com.nttdata.application.usecases.processor.Faild;
 import com.nttdata.application.usecases.processor.payment.*;
 import com.nttdata.domain.bank.BankFactory;
 import com.nttdata.infra.gateway.processor.PayBalance;
 import com.nttdata.infra.gateway.processor.PayCredit;
+import com.nttdata.infra.gateway.transaction.UpdateRepository;
 import com.nttdata.infra.service.MockApiService;
 import com.nttdata.infra.service.ValidateService;
 import org.springframework.context.annotation.Bean;
@@ -71,6 +72,14 @@ public class processorConfig {
     @Bean
     public Completed completed(TransactionRepository repository){
         return new Completed(repository);
+    }
+    @Bean
+    public UpdateRepository updateRepository(RestTemplate restTemplate){
+        return new UpdateRepository(restTemplate);
+    }
+    @Bean
+    public RestTemplate restTemplate(){
+        return new RestTemplate();
     }
 
 

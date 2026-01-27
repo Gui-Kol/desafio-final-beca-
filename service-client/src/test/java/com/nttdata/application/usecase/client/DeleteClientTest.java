@@ -1,7 +1,7 @@
 package com.nttdata.application.usecase.client;
 
 import com.nttdata.application.repository.ClientRepository;
-import com.nttdata.domain.exceptions.ClientInactiveException;
+import com.nttdata.application.exceptions.ClientInactiveException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

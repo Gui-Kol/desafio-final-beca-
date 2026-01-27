@@ -1,7 +1,6 @@
 package com.nttdata.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nttdata.infra.service.kafka.KafkaCancelTransactionProducer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -9,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,10 +31,7 @@ public class KafkaConfig {
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
-    @Bean
-    public KafkaCancelTransactionProducer kafkaCancelTransactionProducer(KafkaTemplate kafkaTemplate, ObjectMapper objectMapper) {
-        return new KafkaCancelTransactionProducer(kafkaTemplate, objectMapper);
-    }
+
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();

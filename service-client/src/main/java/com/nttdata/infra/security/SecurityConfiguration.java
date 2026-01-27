@@ -26,9 +26,14 @@ public class SecurityConfiguration {
                 http.csrf(csrf -> csrf.disable())
                         .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                         .authorizeHttpRequests(req -> {
-                            req.requestMatchers("/login").permitAll();
-                            req.requestMatchers("/clients/import").permitAll();
-                            req.requestMatchers("/clients/{id}/exists").permitAll();
+                            req.requestMatchers(
+                                    "/login",
+                                    "/clients/import",
+                                    "/clients/{id}/exists",
+                                    "/v3/api-docs",
+                                    "/v3/api-docs/**",
+                                    "/swagger-ui/**",
+                                    "/swagger-ui.html").permitAll();
                             req.anyRequest().authenticated();
                         })
                         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
