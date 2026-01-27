@@ -47,17 +47,4 @@ public class TokenService {
     private Instant expirationDate() {
         return LocalDateTime.now().plusHours(3).toInstant(ZoneOffset.of("-03:00"));
     }
-
-    public String getSubjetc(String tokenJWT) {
-        try {
-            var algorithm = Algorithm.HMAC256(secret);
-            return JWT.require(algorithm)
-                    .withIssuer("API NTTData")
-                    .build()
-                    .verify(tokenJWT)
-                    .getSubject();
-        } catch (JWTVerificationException e) {
-            throw new JwtException("Invalid or expired JWT token" + e);
-        }
-    }
 }
