@@ -4,6 +4,8 @@ import com.nttdata.application.repository.TransactionRepository;
 import com.nttdata.domain.transaction.Transaction;
 import com.nttdata.domain.transaction.attribute.PaymentMethod;
 import com.nttdata.domain.transaction.attribute.StatusTransaction;
+import com.nttdata.infra.exception.ClientNotExistsException;
+import com.nttdata.infra.exception.TransactionException;
 import com.nttdata.infra.persistence.client.TransactionEntity;
 import com.nttdata.infra.persistence.client.TransactionRepositoryEntity;
 import com.nttdata.infra.service.ClientValidationService;
@@ -47,13 +49,13 @@ public class TransactionRepositoryJpa implements TransactionRepository {
             var entity = repositoryEntity.getReferenceById(transactionId);
 
             if (entity.getMethod().equals(PaymentMethod.CASH)) {
-                throw new RuntimeException("It is not possible to cancel a transaction made in cash!");
+                throw new TransactionException("It is not possible to cancel a transaction made in cash!");
             }
 
             entity.cancelTransaction();
             return mapper.toTransaction(repositoryEntity.save(entity));
         } else {
-            throw new RuntimeException("There is no transition with this ID " + transactionId);
+            throw new TransactionException("There is no transition with this ID " + transactionId);
         }
     }
 
@@ -73,7 +75,7 @@ public class TransactionRepositoryJpa implements TransactionRepository {
                     .map(mapper::toTransaction)
                     .collect(Collectors.toList());
         } else {
-            throw new RuntimeException("The client with ID " + clientId + " does not exist!");
+            throw new ClientNotExistsException("The client with ID " + clientId + " does not exist!");
         }
     }
 
@@ -84,9 +86,14 @@ public class TransactionRepositoryJpa implements TransactionRepository {
     }
 
     public void update(Transaction trasaction) {
-        var entity = repositoryEntity.getReferenceById(trasaction.getId());
-        entity.update(trasaction);
-        repositoryEntity.save(entity);
+        try {
+            var entity = repositoryEntity.getReferenceById(trasaction.getId());
+            entity.update(trasaction);
+            repositoryEntity.save(entity);
+        }catch (NullPointerException e){
+            throw new TransactionException("The transaction with ID " + trasaction.getId() + " does not exist!");
+        }
+
     }
 
 }

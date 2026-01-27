@@ -6,6 +6,8 @@ import com.nttdata.application.usecase.ListTransactionsPdf;
 import com.nttdata.application.usecase.TransactionCase;
 import com.nttdata.domain.transaction.Transaction;
 import com.nttdata.domain.transaction.TransactionFactory;
+import com.nttdata.infra.exception.ClientNotExistsException;
+import com.nttdata.infra.exception.TransactionException;
 import com.nttdata.infra.presentation.dto.transaction.TransactionDto;
 import com.nttdata.infra.service.kafka.KafkaCancelTransactionProducer;
 import com.nttdata.infra.service.kafka.KafkaTransactionProducer;
@@ -48,7 +50,7 @@ public class TransactionController {
                     .transaction(exchangeRatePurchase.purchase(transaction));
             kafkaTransactionProducer.request(response);
             return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
+        } catch (TransactionException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -59,7 +61,7 @@ public class TransactionController {
             var transactionCancel = cancelTransaction.cancel(transactionId);
             kafkaCancelTransactionProducer.cancel(transactionCancel);
             return ResponseEntity.ok(transactionCancel);
-        }catch (RuntimeException e){
+        }catch (TransactionException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -69,7 +71,7 @@ public class TransactionController {
         try {
             List<Transaction> transactions = listTransactions.byClientId(clientId);
             return ResponseEntity.ok(transactions);
-        }catch (RuntimeException e){
+        }catch (ClientNotExistsException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
