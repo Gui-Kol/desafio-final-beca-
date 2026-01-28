@@ -1,8 +1,3 @@
-# syntax=docker/dockerfile:1
-
-############################
-# Etapa de build (Maven + JDK 17)
-############################
 FROM maven:3.9.9-eclipse-temurin-17 AS build
 WORKDIR /app
 
@@ -19,9 +14,7 @@ ARG MODULE=service-client
 
 RUN mvn -q -DskipTests -pl ${MODULE} -am package
 
-############################
-# Etapa de runtime (JRE 17)
-############################
+
 FROM eclipse-temurin:17-jre
 WORKDIR /app
 

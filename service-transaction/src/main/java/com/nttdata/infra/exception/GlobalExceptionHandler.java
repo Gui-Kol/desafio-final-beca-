@@ -1,6 +1,5 @@
 package com.nttdata.infra.exception;
 
-import com.nttdata.infra.exception.newexception.JwtException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,8 +11,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity handleValidationErrors(MethodArgumentNotValidException e) {
         return ResponseEntity.badRequest().body(e.getDetailMessageArguments());
     }
+
     @ExceptionHandler(JwtException.class)
-    public ResponseEntity handleJwtErrors(JwtException e){
+    public ResponseEntity handleJwtErrors(JwtException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
