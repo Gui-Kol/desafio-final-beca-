@@ -58,7 +58,6 @@ public class ClientController {
             var list = listClients.clientList();
             return ResponseEntity.ok(list);
         } catch (ClientNotExistsException e) {
-            System.out.println(e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }

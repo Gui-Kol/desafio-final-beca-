@@ -13,7 +13,6 @@ public class Completed {
 
     public void complete(Transaction transaction) {
         transaction.setStatus(StatusTransaction.COMPLETED);
-        System.out.println(transaction);
         transactionRepository.update(transaction);
     }
 }

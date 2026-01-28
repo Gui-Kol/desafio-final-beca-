@@ -34,7 +34,6 @@ public class KafkaService {
     @KafkaListener(topics = "transaction-requested", groupId = "transaction-processor-group")
     @Transactional
     public void consumer(String json) {
-        System.out.println(json);
         try {
             TransactionKafkaDto dto = objectMapper.readValue(json, TransactionKafkaDto.class);
             Transaction transaction = new Transaction(dto.id(), dto.sourceAccountId(), dto.destinationAccountId(), dto.value(), dto.currency(), dto.appliedExchangeRate(),

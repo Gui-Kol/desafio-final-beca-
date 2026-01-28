@@ -65,7 +65,6 @@ public class ExcelService {
                 rowNum++;
 
                 if (isRowEmpty.is(currentRow)) {
-                    System.out.println("Linha " + rowNum + " vazia, pulando.");
                     continue;
                 }
 

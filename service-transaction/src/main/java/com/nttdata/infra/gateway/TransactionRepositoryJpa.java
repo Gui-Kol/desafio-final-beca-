@@ -33,7 +33,6 @@ public class TransactionRepositoryJpa implements TransactionRepository {
     @Override
     public boolean validClient(Long sourceAccountId) {
         boolean response = clientValidationService.checkClientExistence(sourceAccountId);
-        System.out.println(response);
         return response;
     }
 
