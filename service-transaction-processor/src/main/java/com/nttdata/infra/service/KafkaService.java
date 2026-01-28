@@ -3,11 +3,15 @@ package com.nttdata.infra.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nttdata.application.usecases.processor.payment.*;
+import com.nttdata.domain.exception.AccountNotExistException;
 import com.nttdata.domain.transaction.Transaction;
 import com.nttdata.domain.transaction.attribute.PaymentMethod;
 import com.nttdata.infra.presentation.dto.TransactionKafkaDto;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,6 +34,8 @@ public class KafkaService {
         this.objectMapper = objectMapper;
     }
 
+    private static final Logger log = LoggerFactory.getLogger(KafkaService.class);
+
 
     @KafkaListener(topics = "transaction-requested", groupId = "transaction-processor-group")
     @Transactional
@@ -50,7 +56,7 @@ public class KafkaService {
                 } else {
                     cash.pay(transaction);
                 }
-            } catch (Exception e) {
+            } catch (AccountNotExistException | TypeNotPresentException e) {
                 System.out.println(e.getMessage() + e);
             }
 
