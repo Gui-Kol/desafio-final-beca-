@@ -26,7 +26,7 @@ public class PayCredit implements PayCreditInterface {
     public void purchaseTransfer(Transaction transaction) {
         BankDto sourceBank = mockApiService.get(transaction.getSourceAccountId());
         BankDto destinationBank = mockApiService.get(transaction.getDestinationAccountId());
-        var transactionValue = transaction.getValue().doubleValue();
+        var transactionValue = transaction.getConvertedValue().doubleValue();
 
         if (sourceBank.credit() >= transactionValue) {
             var remainingSource = sourceBank.credit() - transactionValue;
