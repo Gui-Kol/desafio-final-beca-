@@ -234,5 +234,5 @@ desafiobeca/
 
 ## 🙏 Agradecimentos
 
-- Agradecemos a todas as bibliotecas e projetos de código aberto que tornaram este desenvolvimento possível, como **Spring**, **Apache Kafka** e **Docker**.
-- Agradecimento à **NTT Data** pela proposição do desafio e pela inspiração que tornou possivel sua elaboração.
+- Agradeço a todas as bibliotecas e projetos de código aberto que tornaram este desenvolvimento possível, como **Spring**, **Apache Kafka** e **Docker**.
+- E obrigado **NTT Data** pela proposição do desafio e pela inspiração que tornou possivel sua elaboração.
