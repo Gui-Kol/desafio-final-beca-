@@ -12,9 +12,9 @@ public interface TransactionRepository {
 
     Transaction cancelTransaction(Long transactionId);
 
-    List<Transaction> listByClientId(Long clientId);
+    List<Transaction> listByClientId(Long clientId, int day);
 
-    void createPdf(Long clientId);
+    void createPdf(Long clientId, int day);
 
     void update(Transaction trasaction);
 }

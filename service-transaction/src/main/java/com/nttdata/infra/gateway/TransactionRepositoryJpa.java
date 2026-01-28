@@ -60,9 +60,11 @@ public class TransactionRepositoryJpa implements TransactionRepository {
     }
 
     @Override
-    public List<Transaction> listByClientId(Long clientId) {
+    public List<Transaction> listByClientId(Long clientId, int day) {
+        if (day <= 0){throw new TransactionException("It's not possible to generate a statement for a given number of days!");}
+
         if (repositoryEntity.existsBySourceAccountId(clientId) || repositoryEntity.existsByDestinationAccountId(clientId)) {
-            LocalDateTime timeLimit = LocalDateTime.now().minusHours(24);
+            LocalDateTime timeLimit = LocalDateTime.now().minusDays(day);
 
             List<TransactionEntity> listDestinationAccountId = repositoryEntity.findByDestinationAccountId(clientId);
             List<TransactionEntity> response = repositoryEntity.findBySourceAccountId(clientId);
@@ -80,8 +82,8 @@ public class TransactionRepositoryJpa implements TransactionRepository {
     }
 
     @Override
-    public void createPdf(Long clientId) {
-        List<Transaction> list = listByClientId(clientId);
+    public void createPdf(Long clientId, int day) {
+        List<Transaction> list = listByClientId(clientId, day);
         pdfGenerator.generate(list);
     }
 

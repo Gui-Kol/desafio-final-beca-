@@ -31,18 +31,19 @@ class ListTransactionsTest {
     @Test
     void shouldListTransactionsByClientId() {
         Long clientId = 1L;
+        int day = 1;
         List<Transaction> expectedTransactions = List.of(
                 new Transaction(1L, null, null, null, null, null, null, null, null, null, null, null),
                 new Transaction(2L, null, null, null, null, null, null, null, null, null, null, null)
         );
 
-        when(repository.listByClientId(clientId)).thenReturn(expectedTransactions);
+        when(repository.listByClientId(clientId, day)).thenReturn(expectedTransactions);
 
-        List<Transaction> actualTransactions = listTransactions.byClientId(clientId);
+        List<Transaction> actualTransactions = listTransactions.byClientId(clientId, day);
 
         assertNotNull(actualTransactions);
         assertEquals(2, actualTransactions.size());
         assertEquals(expectedTransactions, actualTransactions);
-        verify(repository).listByClientId(clientId);
+        verify(repository).listByClientId(clientId, day);
     }
 }

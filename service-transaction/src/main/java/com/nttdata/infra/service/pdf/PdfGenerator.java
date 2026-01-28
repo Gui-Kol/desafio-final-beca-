@@ -6,6 +6,7 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.nttdata.domain.transaction.Transaction;
+import com.nttdata.infra.exception.PdfGeneratorException;
 
 import java.awt.Color;
 import java.io.FileOutputStream;
@@ -40,7 +41,7 @@ public class PdfGenerator {
             document.add(table);
 
         } catch (DocumentException | IOException e) {
-            throw new RuntimeException("Error generating PDF: " + e.getMessage());
+            throw new PdfGeneratorException("Error generating PDF: " + e.getMessage());
         } finally {
             if (document.isOpen()) {
                 document.close();

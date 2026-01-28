@@ -12,7 +12,7 @@ public class ListTransactions {
         this.repository = repository;
     }
 
-    public List<Transaction> byClientId(Long clientId){
-        return repository.listByClientId(clientId);
+    public List<Transaction> byClientId(Long clientId, int day){
+        return repository.listByClientId(clientId,day);
     }
 }

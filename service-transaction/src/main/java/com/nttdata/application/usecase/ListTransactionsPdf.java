@@ -8,7 +8,7 @@ public class ListTransactionsPdf {
         this.repository = repository;
     }
 
-    public void create(Long clientId) {
-        repository.createPdf(clientId);
+    public void create(Long clientId, int day) {
+        repository.createPdf(clientId, day);
     }
 }

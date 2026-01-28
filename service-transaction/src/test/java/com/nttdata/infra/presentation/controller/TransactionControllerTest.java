@@ -120,13 +120,14 @@ class TransactionControllerTest {
     @Test
     void listTransactionShouldReturnOkWithListOfTransactions() {
         Long clientId = 1L;
+        int day = 1;
         List<Transaction> transactionList = Collections.singletonList(
                 new Transaction(10L, clientId, 101L, null, null, null, null, null, null, null, null, null)
         );
 
-        when(listTransactions.byClientId(clientId)).thenReturn(transactionList);
+        when(listTransactions.byClientId(clientId, day)).thenReturn(transactionList);
 
-        ResponseEntity response = transactionController.listTransaction(clientId);
+        ResponseEntity response = transactionController.listTransaction(clientId, day);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -136,9 +137,10 @@ class TransactionControllerTest {
     @Test
     void listTransactionShouldReturnBadRequestOnClientNotExistsException() {
         Long clientId = 99L;
-        when(listTransactions.byClientId(clientId)).thenThrow(new ClientNotExistsException("Client not found"));
+        int day = 1;
+        when(listTransactions.byClientId(clientId, day)).thenThrow(new ClientNotExistsException("Client not found"));
 
-        ResponseEntity response = transactionController.listTransaction(clientId);
+        ResponseEntity response = transactionController.listTransaction(clientId, day);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Client not found", response.getBody());
@@ -147,11 +149,12 @@ class TransactionControllerTest {
     @Test
     void listTransactionPdfShouldReturnOkWhenPdfIsCreated() {
         Long clientId = 1L;
-        doNothing().when(pdf).create(clientId);
+        int day = 1;
+        doNothing().when(pdf).create(clientId, day);
 
-        ResponseEntity response = transactionController.listTransactionPdf(clientId);
+        ResponseEntity response = transactionController.listTransactionPdf(clientId, day);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(pdf).create(clientId);
+        verify(pdf).create(clientId, day);
     }
 }

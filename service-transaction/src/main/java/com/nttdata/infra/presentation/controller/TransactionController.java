@@ -7,6 +7,7 @@ import com.nttdata.application.usecase.TransactionCase;
 import com.nttdata.domain.transaction.Transaction;
 import com.nttdata.domain.transaction.TransactionFactory;
 import com.nttdata.infra.exception.ClientNotExistsException;
+import com.nttdata.infra.exception.PdfGeneratorException;
 import com.nttdata.infra.exception.TransactionException;
 import com.nttdata.infra.presentation.dto.transaction.TransactionDto;
 import com.nttdata.infra.service.kafka.KafkaCancelTransactionProducer;
@@ -66,21 +67,21 @@ public class TransactionController {
         }
     }
 
-    @GetMapping("/{clientId}")
-    public ResponseEntity listTransaction(@PathVariable Long clientId){
+    @GetMapping("/{clientId}/{day}")
+    public ResponseEntity listTransaction(@PathVariable Long clientId, @PathVariable int day){
         try {
-            List<Transaction> transactions = listTransactions.byClientId(clientId);
+            List<Transaction> transactions = listTransactions.byClientId(clientId, day);
             return ResponseEntity.ok(transactions);
-        }catch (ClientNotExistsException e){
+        }catch (ClientNotExistsException | TransactionException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @GetMapping("/{clientId}/pdf")
-    public ResponseEntity listTransactionPdf(@PathVariable Long clientId){
+    @GetMapping("/{clientId}/{day}/pdf")
+    public ResponseEntity listTransactionPdf(@PathVariable Long clientId, @PathVariable int day){
         try {
-            pdf.create(clientId);
+            pdf.create(clientId, day);
             return ResponseEntity.ok().build();
-        }catch (RuntimeException e){
+        }catch (PdfGeneratorException | TransactionException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

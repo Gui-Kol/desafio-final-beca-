@@ -26,10 +26,11 @@ class ListTransactionsPdfTest {
     @Test
     void shouldCallRepositoryToCreatePdf() {
         Long clientId = 1L;
+        int day = 1;
 
-        listTransactionsPdf.create(clientId);
+        listTransactionsPdf.create(clientId, day);
 
-        verify(repository).createPdf(clientId);
+        verify(repository).createPdf(clientId, day);
         verifyNoMoreInteractions(repository);
     }
 }
