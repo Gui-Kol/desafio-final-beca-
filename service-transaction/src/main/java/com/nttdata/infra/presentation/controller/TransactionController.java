@@ -24,17 +24,17 @@ public class TransactionController {
     private final TransactionCase transactionCase;
     private final CancelTransaction cancelTransaction;
     private final TransactionFactory transactionFactory;
-    private final ExchangeRatePurchase exchangeRatePurchase;
+    private final ExchangeRatePurchase purchaseExchangeRate;
     private final KafkaTransactionProducer kafkaTransactionProducer;
     private final KafkaCancelTransactionProducer kafkaCancelTransactionProducer;
     private final ListTransactions listTransactions;
     private final ListTransactionsPdf pdf;
 
-    public TransactionController(TransactionCase transactionCase, CancelTransaction cancelTransaction, TransactionFactory transactionFactory, ExchangeRatePurchase exchangeRatePurchase, KafkaTransactionProducer kafkaTransactionProducer, KafkaCancelTransactionProducer kafkaCancelTransactionProducer, ListTransactions listTransactions, ListTransactionsPdf pdf) {
+    public TransactionController(TransactionCase transactionCase, CancelTransaction cancelTransaction, TransactionFactory transactionFactory, ExchangeRatePurchase purchaseExchangeRate, KafkaTransactionProducer kafkaTransactionProducer, KafkaCancelTransactionProducer kafkaCancelTransactionProducer, ListTransactions listTransactions, ListTransactionsPdf pdf) {
         this.transactionCase = transactionCase;
         this.cancelTransaction = cancelTransaction;
         this.transactionFactory = transactionFactory;
-        this.exchangeRatePurchase = exchangeRatePurchase;
+        this.purchaseExchangeRate = purchaseExchangeRate;
         this.kafkaTransactionProducer = kafkaTransactionProducer;
         this.kafkaCancelTransactionProducer = kafkaCancelTransactionProducer;
         this.listTransactions = listTransactions;
@@ -48,8 +48,20 @@ public class TransactionController {
                 dto.type(), dto.method());
         try {
             var response = transactionCase
-                    .transaction(exchangeRatePurchase.purchase(transaction));
+                    .transaction(purchaseExchangeRate.purchase(transaction));
             kafkaTransactionProducer.request(response);
+            return ResponseEntity.ok(response);
+        } catch (TransactionException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @PostMapping("/external")
+    public ResponseEntity externalPayment(@RequestBody TransactionDto dto) {
+        Transaction transaction = transactionFactory.factory(null,dto.sourceAccountId(),dto.destinationAccountId(),dto.value(),dto.currency(),dto.description(),
+                dto.type(), dto.method());
+        try {
+            var response = transactionCase
+                    .transactionExternal(purchaseExchangeRate.purchase(transaction));
             return ResponseEntity.ok(response);
         } catch (TransactionException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

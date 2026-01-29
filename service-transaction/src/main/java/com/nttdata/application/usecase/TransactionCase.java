@@ -2,6 +2,7 @@ package com.nttdata.application.usecase;
 
 import com.nttdata.application.repository.TransactionRepository;
 import com.nttdata.domain.transaction.Transaction;
+import com.nttdata.domain.transaction.attribute.StatusTransaction;
 import com.nttdata.infra.exception.TransactionException;
 
 public class TransactionCase {
@@ -23,4 +24,12 @@ public class TransactionCase {
         }
     }
 
+    public Transaction transactionExternal(Transaction transaction) {
+        boolean sourceAccountValid = repository.validClient(transaction.getSourceAccountId());
+        if (sourceAccountValid){
+            return repository.saveTransactionCompleted(transaction);
+        }else {
+            throw new TransactionException("The client is invalid or inactive!");
+        }
+    }
 }

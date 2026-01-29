@@ -17,4 +17,6 @@ public interface TransactionRepository {
     void createPdf(Long clientId, int day);
 
     void update(Transaction trasaction);
+
+    Transaction saveTransactionCompleted(Transaction transaction);
 }

@@ -46,11 +46,6 @@ public class TransactionRepositoryJpa implements TransactionRepository {
     public Transaction cancelTransaction(Long transactionId) {
         if (repositoryEntity.existsById(transactionId)) {
             var entity = repositoryEntity.getReferenceById(transactionId);
-
-            if (entity.getMethod().equals(PaymentMethod.CASH)) {
-                throw new TransactionException("It is not possible to cancel a transaction made in cash!");
-            }
-
             entity.cancelTransaction();
             return mapper.toTransaction(repositoryEntity.save(entity));
         } else {
@@ -95,6 +90,13 @@ public class TransactionRepositoryJpa implements TransactionRepository {
             throw new TransactionException("The transaction with ID " + trasaction.getId() + " does not exist!");
         }
 
+    }
+
+    @Override
+    public Transaction saveTransactionCompleted(Transaction transaction) {
+        transaction.setStatus(StatusTransaction.COMPLETED);
+        var response = repositoryEntity.save(mapper.toTransactionEntity(transaction));
+        return mapper.toTransaction(response);
     }
 
 }
