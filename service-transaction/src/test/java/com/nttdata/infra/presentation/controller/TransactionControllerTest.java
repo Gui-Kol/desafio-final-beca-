@@ -9,6 +9,7 @@ import com.nttdata.domain.transaction.TransactionFactory;
 import com.nttdata.domain.transaction.attribute.PaymentMethod;
 import com.nttdata.domain.transaction.attribute.TransactionType;
 import com.nttdata.infra.exception.newexception.ClientNotExistsException;
+import com.nttdata.infra.exception.newexception.PdfGeneratorException;
 import com.nttdata.infra.exception.newexception.TransactionException;
 import com.nttdata.infra.presentation.dto.transaction.TransactionDto;
 import com.nttdata.infra.service.brasilapi.ExchangeRatePurchase;
@@ -91,6 +92,40 @@ class TransactionControllerTest {
     }
 
     @Test
+    void externalPaymentShouldReturnOkWhenTransactionIsSuccessful() {
+        TransactionDto dto = new TransactionDto(200L, null, BigDecimal.valueOf(150.0), "USD", "External", TransactionType.DEPOSIT, PaymentMethod.CREDIT_CARD);
+        Transaction initialTransaction = new Transaction(null, 200L, null, null, null, null, null, null, null, null, null, null);
+        Transaction exchangedTransaction = new Transaction(null, 200L, null, null, null, null, null, null, null, null, null, null);
+        Transaction finalTransaction = new Transaction(2L, 200L, null, null, null, null, null, null, null, null, null, null);
+
+        when(transactionFactory.factory(any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(initialTransaction);
+        when(exchangeRatePurchase.purchase(initialTransaction)).thenReturn(exchangedTransaction);
+        when(transactionCase.transactionExternal(exchangedTransaction)).thenReturn(finalTransaction);
+
+        ResponseEntity response = transactionController.externalPayment(dto);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(finalTransaction, response.getBody());
+        verify(transactionCase).transactionExternal(exchangedTransaction);
+        verify(kafkaTransactionProducer, never()).request(any());
+    }
+
+    @Test
+    void externalPaymentShouldReturnBadRequestOnTransactionException() {
+        TransactionDto dto = new TransactionDto(200L, null, BigDecimal.valueOf(150.0), "USD", "External", TransactionType.DEPOSIT, PaymentMethod.CREDIT_CARD);
+        Transaction initialTransaction = new Transaction(null, 200L, null, null, null, null, null, null, null, null, null, null);
+
+        when(transactionFactory.factory(any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(initialTransaction);
+        when(exchangeRatePurchase.purchase(initialTransaction)).thenReturn(initialTransaction);
+        when(transactionCase.transactionExternal(initialTransaction)).thenThrow(new TransactionException("External transaction failed"));
+
+        ResponseEntity response = transactionController.externalPayment(dto);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("External transaction failed", response.getBody());
+    }
+
+    @Test
     void cancelShouldReturnOkWhenCancellationIsSuccessful() {
         Long transactionId = 1L;
         Transaction cancelledTransaction = new Transaction(transactionId, null, null, null, null, null, null, null, null, null, null, null);
@@ -147,6 +182,18 @@ class TransactionControllerTest {
     }
 
     @Test
+    void listTransactionShouldReturnBadRequestOnTransactionException() {
+        Long clientId = 1L;
+        int day = 1;
+        when(listTransactions.byClientId(clientId, day)).thenThrow(new TransactionException("Error listing transactions"));
+
+        ResponseEntity response = transactionController.listTransaction(clientId, day);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Error listing transactions", response.getBody());
+    }
+
+    @Test
     void listTransactionPdfShouldReturnOkWhenPdfIsCreated() {
         Long clientId = 1L;
         int day = 1;
@@ -156,5 +203,17 @@ class TransactionControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(pdf).create(clientId, day);
+    }
+
+    @Test
+    void listTransactionPdfShouldReturnBadRequestOnPdfGeneratorException() {
+        Long clientId = 1L;
+        int day = 1;
+        doThrow(new PdfGeneratorException("PDF generation failed")).when(pdf).create(clientId, day);
+
+        ResponseEntity response = transactionController.listTransactionPdf(clientId, day);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("PDF generation failed", response.getBody());
     }
 }

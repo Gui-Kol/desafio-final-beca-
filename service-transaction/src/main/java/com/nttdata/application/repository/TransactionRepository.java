@@ -5,7 +5,7 @@ import com.nttdata.domain.transaction.Transaction;
 import java.util.List;
 
 public interface TransactionRepository {
-    boolean validClient(Long sourceAccountId);
+    boolean validClient(Long AccountId);
 
 
     Transaction saveTransactionPending(Transaction transaction);
