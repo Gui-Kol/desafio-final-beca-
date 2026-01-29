@@ -1,4 +1,4 @@
-package com.nttdata.infra.exception;
+package com.nttdata.infra.exception.newexception;
 
 public class ClientNotExistsException extends RuntimeException {
     public ClientNotExistsException(String message) {

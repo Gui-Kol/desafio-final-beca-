@@ -2,10 +2,9 @@ package com.nttdata.infra.gateway;
 
 import com.nttdata.application.repository.TransactionRepository;
 import com.nttdata.domain.transaction.Transaction;
-import com.nttdata.domain.transaction.attribute.PaymentMethod;
 import com.nttdata.domain.transaction.attribute.StatusTransaction;
-import com.nttdata.infra.exception.ClientNotExistsException;
-import com.nttdata.infra.exception.TransactionException;
+import com.nttdata.infra.exception.newexception.ClientNotExistsException;
+import com.nttdata.infra.exception.newexception.TransactionException;
 import com.nttdata.infra.persistence.client.TransactionEntity;
 import com.nttdata.infra.persistence.client.TransactionRepositoryEntity;
 import com.nttdata.infra.service.ClientValidationService;
@@ -32,8 +31,7 @@ public class TransactionRepositoryJpa implements TransactionRepository {
 
     @Override
     public boolean validClient(Long sourceAccountId) {
-        boolean response = clientValidationService.checkClientExistence(sourceAccountId);
-        return response;
+        return clientValidationService.checkClientExistence(sourceAccountId);
     }
 
     @Override
@@ -94,7 +92,7 @@ public class TransactionRepositoryJpa implements TransactionRepository {
 
     @Override
     public Transaction saveTransactionCompleted(Transaction transaction) {
-        transaction.setStatus(StatusTransaction.COMPLETED);
+        transaction.setStatus(StatusTransaction.EXTERNAL);
         var response = repositoryEntity.save(mapper.toTransactionEntity(transaction));
         return mapper.toTransaction(response);
     }

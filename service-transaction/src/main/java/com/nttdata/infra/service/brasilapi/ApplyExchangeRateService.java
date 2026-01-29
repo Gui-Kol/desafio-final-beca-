@@ -1,6 +1,7 @@
 package com.nttdata.infra.service.brasilapi;
 
 import com.nttdata.domain.transaction.Transaction;
+import com.nttdata.infra.exception.newexception.TransactionException;
 import com.nttdata.infra.presentation.dto.transaction.ExchangeRateDto;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -33,13 +34,13 @@ public class ApplyExchangeRateService {
                     if (ptaxFechamentoOpt.isPresent()) {
                         return ptaxFechamentoOpt.get();
                     } else {
-                        throw new RuntimeException("'PTAX CLOSING' quote not found in the API response for the currency " + currency + " in date " + date);
+                        throw new TransactionException("'PTAX CLOSING' quote not found in the API response for the currency " + currency + " in date " + date);
                     }
                 } else {
-                    throw new RuntimeException("Empty exchange API response or no quotes for the currency " + currency + " in date " + date);
+                    throw new TransactionException("Empty exchange API response or no quotes for the currency " + currency + " in date " + date);
                 }
             } catch (RestClientException e) {
-                throw new RuntimeException("Error calling the exchange API for " + currency + " in " + date + ": " + e.getMessage());
+                throw new TransactionException("Error calling the exchange API for " + currency + " in " + date + ": " + e.getMessage());
             }
         }
 

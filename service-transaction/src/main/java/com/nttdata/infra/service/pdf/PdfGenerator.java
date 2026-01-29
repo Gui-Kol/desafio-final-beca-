@@ -6,7 +6,7 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.nttdata.domain.transaction.Transaction;
-import com.nttdata.infra.exception.PdfGeneratorException;
+import com.nttdata.infra.exception.newexception.PdfGeneratorException;
 
 import java.awt.Color;
 import java.io.FileOutputStream;

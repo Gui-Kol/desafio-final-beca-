@@ -2,9 +2,8 @@ package com.nttdata.application.usecase;
 
 import com.nttdata.application.repository.TransactionRepository;
 import com.nttdata.domain.transaction.Transaction;
-import com.nttdata.infra.exception.TransactionException;
+import com.nttdata.infra.exception.newexception.TransactionException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

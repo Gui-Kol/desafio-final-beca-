@@ -6,13 +6,14 @@ import com.nttdata.application.usecase.ListTransactionsPdf;
 import com.nttdata.application.usecase.TransactionCase;
 import com.nttdata.domain.transaction.Transaction;
 import com.nttdata.domain.transaction.TransactionFactory;
-import com.nttdata.infra.exception.ClientNotExistsException;
-import com.nttdata.infra.exception.PdfGeneratorException;
-import com.nttdata.infra.exception.TransactionException;
+import com.nttdata.infra.exception.newexception.ClientNotExistsException;
+import com.nttdata.infra.exception.newexception.PdfGeneratorException;
+import com.nttdata.infra.exception.newexception.TransactionException;
 import com.nttdata.infra.presentation.dto.transaction.TransactionDto;
 import com.nttdata.infra.service.kafka.KafkaCancelTransactionProducer;
 import com.nttdata.infra.service.kafka.KafkaTransactionProducer;
 import com.nttdata.infra.service.brasilapi.ExchangeRatePurchase;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,7 @@ public class TransactionController {
 
 
     @PostMapping()
-    public ResponseEntity payment(@RequestBody TransactionDto dto) {
+    public ResponseEntity payment(@RequestBody @Valid TransactionDto dto) {
         Transaction transaction = transactionFactory.factory(null,dto.sourceAccountId(),dto.destinationAccountId(),dto.value(),dto.currency(),dto.description(),
                 dto.type(), dto.method());
         try {
@@ -56,7 +57,7 @@ public class TransactionController {
         }
     }
     @PostMapping("/external")
-    public ResponseEntity externalPayment(@RequestBody TransactionDto dto) {
+    public ResponseEntity externalPayment(@RequestBody @Valid TransactionDto dto) {
         Transaction transaction = transactionFactory.factory(null,dto.sourceAccountId(),dto.destinationAccountId(),dto.value(),dto.currency(),dto.description(),
                 dto.type(), dto.method());
         try {

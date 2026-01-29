@@ -1,5 +1,6 @@
 package com.nttdata.infra.service;
 
+import com.nttdata.infra.exception.newexception.TransactionException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -18,15 +19,11 @@ public class ClientValidationService {
         String url = clientsServiceBaseUrl + "/clients/{id}/exists";
 
         try {
-            Boolean exists = restTemplate.getForObject(url, Boolean.class, clientId);
-
-            if(exists == null){
-                exists = false;
-            }
-            return exists;
+            var response = restTemplate.getForObject(url, Boolean.class, clientId);
+            return response;
 
         } catch (RestClientException e) {
-            throw new RuntimeException("Error communicating with the client microservice for ID " + clientId + ": " + e.getMessage());
+            throw new TransactionException("Client with Id " + clientId + " does not exists or was not found.");
         }
     }
 }

@@ -3,25 +3,26 @@ package com.nttdata.infra.presentation.dto.transaction;
 import com.nttdata.domain.transaction.attribute.PaymentMethod;
 import com.nttdata.domain.transaction.attribute.TransactionType;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 
 public record TransactionDto(
-        @NotBlank
+        @NotNull(message = "The value cannot be null.")
         Long sourceAccountId,
-        @NotBlank
+        @NotNull(message = "The value cannot be null.")
         Long destinationAccountId,
-        @NotBlank
-        @Positive
+        @NotNull(message = "The value cannot be null.")
+        @Positive(message = "The value must be greater than 0.")
         BigDecimal value,
-        @NotBlank
+        @NotNull(message = "The value cannot be null.")
         String currency,
-        @NotBlank
+        @NotBlank(message = "The description cannot be null.")
         String description,
-        @NotBlank
+        @NotNull(message = "The type cannot be null.")
         TransactionType type,
-        @NotBlank
+        @NotNull(message = "The Method cannot be null.")
         PaymentMethod method
 ) {
 }
