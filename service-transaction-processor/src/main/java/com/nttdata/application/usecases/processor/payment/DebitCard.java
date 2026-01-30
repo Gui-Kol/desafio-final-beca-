@@ -14,16 +14,13 @@ public class DebitCard {
 
     public void pay(Transaction transaction) {
 
-        if (transaction.getType().equals(TransactionType.DEPOSIT)) {
-            payBalance.setFaild(transaction);
-
-        } else if (transaction.getType().equals(TransactionType.PURCHASE)) {
+        if (transaction.getType().equals(TransactionType.PURCHASE)) {
             payBalance.purchaseTransfer(transaction);
 
         } else if (transaction.getType().equals(TransactionType.WITHDRAWAL)) {
             payBalance.withdrawal(transaction);
 
-        } else { //TRANSFER
+        } else { //TRANSFER or DEPOSIT
             payBalance.setFaild(transaction);
         }
 

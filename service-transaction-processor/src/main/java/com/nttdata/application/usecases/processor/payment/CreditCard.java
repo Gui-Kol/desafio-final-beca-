@@ -14,16 +14,9 @@ public class CreditCard {
 
     public void pay(Transaction transaction) {
 
-        if (transaction.getType().equals(TransactionType.DEPOSIT)) {
+        if (transaction.getType().equals(TransactionType.DEPOSIT) || transaction.getType().equals(TransactionType.WITHDRAWAL)) {
             payCredit.setFaild(transaction);
-
-        } else if (transaction.getType().equals(TransactionType.PURCHASE)) {
-            payCredit.purchaseTransfer(transaction);
-
-        } else if (transaction.getType().equals(TransactionType.WITHDRAWAL)) {
-            payCredit.setFaild(transaction);
-
-        } else { //TRANSFER
+        } else { //TRANSFER or PURCHASE
             payCredit.purchaseTransfer(transaction);
         }
     }

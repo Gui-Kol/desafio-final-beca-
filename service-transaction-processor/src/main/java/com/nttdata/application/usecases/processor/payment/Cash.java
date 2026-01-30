@@ -16,11 +16,9 @@ public class Cash {
 
         if (trasaction.getType().equals(TransactionType.DEPOSIT)) {
             payBalance.deposit(trasaction);
-        } else if (trasaction.getType().equals(TransactionType.PURCHASE)) {
-            payBalance.setCompleted(trasaction);
         } else if (trasaction.getType().equals(TransactionType.WITHDRAWAL)) {
             payBalance.withdrawal(trasaction);
-        } else {
+        } else { //PURCHASE or TRANSFER
             payBalance.setCompleted(trasaction);
         }
 

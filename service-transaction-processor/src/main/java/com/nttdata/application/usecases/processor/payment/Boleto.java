@@ -14,19 +14,12 @@ public class Boleto {
 
     public void pay(Transaction transaction) {
 
-        if (transaction.getType().equals(TransactionType.DEPOSIT)) {
+        if (transaction.getType().equals(TransactionType.DEPOSIT) || transaction.getType().equals(TransactionType.WITHDRAWAL)) {
             payBalance.setFaild(transaction);
 
-        } else if (transaction.getType().equals(TransactionType.PURCHASE)) {
-            payBalance.purchaseTransfer(transaction);
-
-        } else if (transaction.getType().equals(TransactionType.WITHDRAWAL)) {
-            payBalance.setFaild(transaction);
-
-        } else { //TRANSFER
+        } else {  // TRANSFER or PURCHASE
             payBalance.purchaseTransfer(transaction);
         }
-
-
     }
 }
+
