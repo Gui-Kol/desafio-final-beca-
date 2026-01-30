@@ -5,7 +5,7 @@ import com.nttdata.infra.gateway.client.ClientMapper;
 import com.nttdata.infra.persistence.client.ClientEntity;
 import com.nttdata.infra.presentation.dtos.security.AuthenticationDto;
 import com.nttdata.infra.presentation.dtos.security.TokenJWTDto;
-import com.nttdata.infra.security.TokenService;
+import com.nttdata.infra.service.security.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,5 @@
-package com.nttdata.infra.security;
+package com.nttdata.infra.service.security;
 
-import com.nttdata.infra.presentation.controller.AuthenticationController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

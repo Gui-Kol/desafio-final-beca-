@@ -1,8 +1,8 @@
 package com.nttdata.configs;
 
-import com.nttdata.infra.excel.usecases.GetCellValueAsLocalDate;
-import com.nttdata.infra.excel.usecases.GetCellValueAsString;
-import com.nttdata.infra.excel.usecases.IsRowEmpty;
+import com.nttdata.infra.service.excel.usecases.GetCellValueAsLocalDate;
+import com.nttdata.infra.service.excel.usecases.GetCellValueAsString;
+import com.nttdata.infra.service.excel.usecases.IsRowEmpty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

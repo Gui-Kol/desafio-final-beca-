@@ -1,7 +1,7 @@
 package com.nttdata.infra.presentation.controller;
 
 import com.nttdata.domain.client.Client;
-import com.nttdata.infra.excel.ExcelService;
+import com.nttdata.infra.service.excel.ExcelService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,4 +1,4 @@
-package com.nttdata.infra.security;
+package com.nttdata.infra.service.security;
 
 import com.nttdata.infra.persistence.client.ClientRepositoryEntity;
 import org.springframework.security.core.userdetails.UserDetails;

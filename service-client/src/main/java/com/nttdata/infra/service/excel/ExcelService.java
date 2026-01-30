@@ -1,11 +1,11 @@
-package com.nttdata.infra.excel;
+package com.nttdata.infra.service.excel;
 
 import com.nttdata.application.repository.ClientRepository;
 import com.nttdata.domain.client.Client;
 import com.nttdata.domain.client.ClientFactory;
-import com.nttdata.infra.excel.usecases.GetCellValueAsLocalDate;
-import com.nttdata.infra.excel.usecases.GetCellValueAsString;
-import com.nttdata.infra.excel.usecases.IsRowEmpty;
+import com.nttdata.infra.service.excel.usecases.GetCellValueAsLocalDate;
+import com.nttdata.infra.service.excel.usecases.GetCellValueAsString;
+import com.nttdata.infra.service.excel.usecases.IsRowEmpty;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -89,16 +89,18 @@ public class ExcelService {
                     Client client = clientFactory.factory(name, email, username, password, cpf, birthDay, telephone, street, number, addressDetails, neighborhood, city, state, postcode, country);
 
                     if (name.isEmpty() || email.isEmpty() || cpf.isEmpty()) {
-                        System.err.println("Erro na linha " + rowNum + ": Nome, Email ou CPF não podem ser vazios. Cliente '" + name + "' ignorado.");
+                        System.err.println("Error in line " + rowNum + ": Name, Email, or CPF cannot be empty. Client '" + name + "' ignored.");
                         continue;
                     }
 
                     clientRepository.registerClientRoleClient(client);
                     importedClients.add(client);
-                    System.out.println("✅ Cliente '" + client.getName() + "' da linha " + rowNum + " importado com sucesso.");
+                    System.out.println("✅ Customer " + client.getName() + "'  from line " + rowNum + " , imported successfully.");
 
-                } catch (Exception e) {
-                    System.err.println("❌ Erro ao processar linha " + rowNum + ": " + e.getMessage());
+                } catch (RuntimeException e) {
+                    throw new IllegalArgumentException("❌ Serious error saving the client on the line: " + rowNum + "\n" + e.getMessage());
+                }catch (Exception e){
+                    System.out.println("❌ Error processing line " + rowNum + ": " + e.getMessage());
                 }
             }
         }
