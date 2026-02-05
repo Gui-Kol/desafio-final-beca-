@@ -3,13 +3,20 @@ package com.nttdata.infra.service.excel;
 import com.nttdata.application.repository.ClientRepository;
 import com.nttdata.domain.client.Client;
 import com.nttdata.domain.client.ClientFactory;
+import com.nttdata.infra.presentation.dtos.address.AddressDto;
+import com.nttdata.infra.presentation.dtos.client.ClientDto;
+import com.nttdata.infra.service.ClientValidator;
 import com.nttdata.infra.service.excel.usecases.GetCellValueAsLocalDate;
 import com.nttdata.infra.service.excel.usecases.GetCellValueAsString;
 import com.nttdata.infra.service.excel.usecases.IsRowEmpty;
+import jakarta.validation.Valid;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.hibernate.validator.constraints.br.CPF;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,13 +30,16 @@ import java.util.List;
 
 @Service
 public class ExcelService {
+    private final ClientValidator clientValidator;
+    private static final Logger log = LoggerFactory.getLogger(ExcelService.class);
     private final ClientFactory clientFactory;
     private final ClientRepository clientRepository;
     private final GetCellValueAsString getCellValueAsString;
     private final IsRowEmpty isRowEmpty;
     private final GetCellValueAsLocalDate getCellValueAsLocalDate;
 
-    public ExcelService(ClientFactory clientFactory, ClientRepository clientRepository, GetCellValueAsString getCellValueAsString, IsRowEmpty isRowEmpty, GetCellValueAsLocalDate getCellValueAsLocalDate) {
+    public ExcelService(ClientValidator clientValidator, ClientFactory clientFactory, ClientRepository clientRepository, GetCellValueAsString getCellValueAsString, IsRowEmpty isRowEmpty, GetCellValueAsLocalDate getCellValueAsLocalDate) {
+        this.clientValidator = clientValidator;
         this.clientFactory = clientFactory;
         this.clientRepository = clientRepository;
         this.getCellValueAsString = getCellValueAsString;
@@ -59,7 +69,7 @@ public class ExcelService {
                 rowIterator.next();
             }
 
-            int rowNum = 1; // Contador para linhas de dados (começa após o cabeçalho)
+            int rowNum = 1;
             while (rowIterator.hasNext()) {
                 Row currentRow = rowIterator.next();
                 rowNum++;
@@ -86,26 +96,28 @@ public class ExcelService {
                     String postcode = getCellValueAsString.get(currentRow.getCell(13));
                     String country = getCellValueAsString.get(currentRow.getCell(14));
 
+                    clientValidator.validate(new ClientDto(name,email,new AddressDto(street, number, addressDetails, neighborhood,
+                            city, state,postcode,country),username,password,cpf,birthDay,telephone));
                     Client client = clientFactory.factory(name, email, username, password, cpf, birthDay, telephone, street, number, addressDetails, neighborhood, city, state, postcode, country);
 
                     if (name.isEmpty() || email.isEmpty() || cpf.isEmpty()) {
-                        System.err.println("Error in line " + rowNum + ": Name, Email, or CPF cannot be empty. Client '" + name + "' ignored.");
+                        log.error("❌ Error in line '{}' : Name, Email, or CPF cannot be empty. Client '{}' ignored.", rowNum, name);
                         continue;
                     }
-
+                    log.info("✅ Line processed successfully, client {} saved!", name);
                     clientRepository.registerClientRoleClient(client);
                     importedClients.add(client);
-                    System.out.println("✅ Customer " + client.getName() + "'  from line " + rowNum + " , imported successfully.");
 
                 } catch (RuntimeException e) {
                     throw new IllegalArgumentException("❌ Serious error saving the client on the line: " + rowNum + "\n" + e.getMessage());
                 }catch (Exception e){
-                    System.out.println("❌ Error processing line " + rowNum + ": " + e.getMessage());
+                    log.error("❌ Error processing line {} {}" ,rowNum, e.getMessage());
                 }
             }
         }
 
         return importedClients;
     }
+
 }
 

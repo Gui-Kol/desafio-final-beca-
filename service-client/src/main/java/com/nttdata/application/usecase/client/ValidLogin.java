@@ -13,7 +13,7 @@ public class ValidLogin {
     }
 
 
-    public void validFail(String username) {
+    public void registerFailedAttempt(String username) {
         int attempts = repository.attemptsValidFail(username);
         if (attempts < maxAttempts) {
             var response = maxAttempts - attempts;
@@ -23,11 +23,11 @@ public class ValidLogin {
         }
     }
 
-    public void validOk(String username) {
+    public void resetAttempts(String username) {
         repository.attemptsReset(username);
     }
 
-    public void valid(String username) {
+    public void checkIfClientIsBlocked(String username) {
         int attempts = repository.getAttemptsByUsername(username);
         if (attempts >= maxAttempts){
             throw new ValidException("Client blocked due to too many attempts!");
