@@ -1,6 +1,6 @@
 package com.nttdata.infra.exception;
 
-import com.nttdata.infra.exception.newexception.JwtException;
+import com.nttdata.domain.exception.JwtException;
 import jakarta.validation.UnexpectedTypeException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;

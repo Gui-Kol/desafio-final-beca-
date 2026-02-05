@@ -1,7 +1,7 @@
 package com.nttdata.application.usecase.client;
 
 import com.nttdata.application.repository.ClientRepository;
-import com.nttdata.infra.exception.newexception.ClientInactiveException;
+import com.nttdata.domain.exception.ClientInactiveException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,11 +27,11 @@ class DeleteClientTest {
     void shouldDeleteClientWhenActive() {
         Long clientId = 123L;
 
-        when(clientRepository.verifyActive(clientId)).thenReturn(true);
+        when(clientRepository.verifyActiveById(clientId)).thenReturn(true);
 
         deleteClient.deleteClient(clientId);
 
-        verify(clientRepository, times(1)).verifyActive(clientId);
+        verify(clientRepository, times(1)).verifyActiveById(clientId);
         verify(clientRepository, times(1)).deleteClient(clientId);
     }
 
@@ -40,14 +40,14 @@ class DeleteClientTest {
     void shouldThrowClientInactiveExceptionWhenInactive() {
         Long clientId = 456L;
 
-        when(clientRepository.verifyActive(clientId)).thenReturn(false);
+        when(clientRepository.verifyActiveById(clientId)).thenReturn(false);
 
         ClientInactiveException thrown = assertThrows(ClientInactiveException.class, () -> {
             deleteClient.deleteClient(clientId);
         });
 
         assertEquals("Client already inactive!", thrown.getMessage());
-        verify(clientRepository, times(1)).verifyActive(clientId);
+        verify(clientRepository, times(1)).verifyActiveById(clientId);
         verify(clientRepository, never()).deleteClient(clientId);
     }
 
@@ -57,8 +57,8 @@ class DeleteClientTest {
         Long activeClientId = 101L;
         Long inactiveClientId = 102L;
 
-        when(clientRepository.verifyActive(activeClientId)).thenReturn(true);
-        when(clientRepository.verifyActive(inactiveClientId)).thenReturn(false);
+        when(clientRepository.verifyActiveById(activeClientId)).thenReturn(true);
+        when(clientRepository.verifyActiveById(inactiveClientId)).thenReturn(false);
 
         deleteClient.deleteClient(activeClientId);
 
@@ -66,8 +66,8 @@ class DeleteClientTest {
             deleteClient.deleteClient(inactiveClientId);
         });
         deleteClient.deleteClient(activeClientId);
-        verify(clientRepository, times(2)).verifyActive(activeClientId);
-        verify(clientRepository, times(1)).verifyActive(inactiveClientId);
+        verify(clientRepository, times(2)).verifyActiveById(activeClientId);
+        verify(clientRepository, times(1)).verifyActiveById(inactiveClientId);
         verify(clientRepository, times(2)).deleteClient(activeClientId);
         verify(clientRepository, never()).deleteClient(inactiveClientId);
     }

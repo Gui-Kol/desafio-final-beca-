@@ -11,7 +11,10 @@ public class VerifyClientActive {
 
 
     public boolean verifyById(Long id){
-        return clientRepository.verifyActive(id);
+        return clientRepository.verifyActiveById(id);
     }
 
+    public boolean verifyByUsername(String username) {
+        return clientRepository.verifyActiveByUsername(username);
+    }
 }

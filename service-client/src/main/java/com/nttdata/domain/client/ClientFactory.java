@@ -16,7 +16,7 @@ public class ClientFactory {
         var updateDate = LocalDate.ofYearDay(0, 1);
         var createDate = LocalDate.now();
 
-        return new Client(null,name, email, address, username, password, cpf, birthDay, telephone,createDate,updateDate , true, loginDate);
+        return new Client(null,name, email, address, username, password, cpf, birthDay, telephone,createDate,updateDate , true, loginDate, 0);
     }
 
 

@@ -24,22 +24,22 @@ class VerifyClientActiveTest {
     @Test
     void shouldReturnTrueWhenClientIsActive() {
         Long clientId = 1L;
-        when(clientRepository.verifyActive(clientId)).thenReturn(true);
+        when(clientRepository.verifyActiveById(clientId)).thenReturn(true);
 
         boolean result = verifyClientActive.verifyById(clientId);
 
         assertTrue(result);
-        verify(clientRepository).verifyActive(clientId);
+        verify(clientRepository).verifyActiveById(clientId);
     }
 
     @Test
     void shouldReturnFalseWhenClientIsInactive() {
         Long clientId = 2L;
-        when(clientRepository.verifyActive(clientId)).thenReturn(false);
+        when(clientRepository.verifyActiveById(clientId)).thenReturn(false);
 
         boolean result = verifyClientActive.verifyById(clientId);
 
         assertFalse(result);
-        verify(clientRepository).verifyActive(clientId);
+        verify(clientRepository).verifyActiveById(clientId);
     }
 }

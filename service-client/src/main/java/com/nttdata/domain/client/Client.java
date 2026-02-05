@@ -19,9 +19,9 @@ public class Client {
     private LocalDate lastUpdateDate;
     private boolean active;
     private LocalDateTime lastLoginDate;
+    private int loginAttempts;
 
-
-    public Client(Long id, String name, String email, Address address, String username, String password, String cpf, LocalDate birthDay, String telephone, LocalDate creationDate, LocalDate updateDate, boolean active, LocalDateTime loginDate) {
+    public Client(Long id, String name, String email, Address address, String username, String password, String cpf, LocalDate birthDay, String telephone, LocalDate creationDate, LocalDate lastUpdateDate, boolean active, LocalDateTime lastLoginDate, int loginAttempts) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -32,9 +32,10 @@ public class Client {
         this.birthDay = birthDay;
         this.telephone = telephone;
         this.creationDate = creationDate;
-        this.lastUpdateDate = updateDate;
+        this.lastUpdateDate = lastUpdateDate;
         this.active = active;
-        this.lastLoginDate = loginDate;
+        this.lastLoginDate = lastLoginDate;
+        this.loginAttempts = loginAttempts;
     }
 
     public Client() {}
@@ -141,6 +142,14 @@ public class Client {
 
     public void setLastLoginDate(LocalDateTime lastLoginDate) {
         this.lastLoginDate = lastLoginDate;
+    }
+
+    public int getLoginAttempts() {
+        return loginAttempts;
+    }
+
+    public void setLoginAttempts(int loginAttempts) {
+        this.loginAttempts = loginAttempts;
     }
 
     @Override

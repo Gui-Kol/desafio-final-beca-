@@ -43,6 +43,8 @@ public class ClientEntity implements UserDetails {
     private boolean active;
     @Column(name = "last_login_date")
     private LocalDateTime lastLoginDate;
+    @Column(name = "login_attempts")
+    private int loginAttempts;
 
 
     public void update(Client client) {

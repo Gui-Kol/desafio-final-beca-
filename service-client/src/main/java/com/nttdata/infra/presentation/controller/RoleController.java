@@ -4,7 +4,7 @@ import com.nttdata.application.usecase.client.SetClientActive;
 import com.nttdata.application.usecase.role.FindRoleByClientId;
 import com.nttdata.application.usecase.role.UpdateClientRole;
 import com.nttdata.domain.role.Role;
-import com.nttdata.infra.exception.newexception.ClientNotExistsException;
+import com.nttdata.domain.exception.ClientNotExistsException;
 import com.nttdata.infra.presentation.dtos.role.UpdateRoleDto;
 import com.nttdata.infra.presentation.dtos.role.RoleDto;
 import org.springframework.http.ResponseEntity;

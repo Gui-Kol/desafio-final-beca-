@@ -18,7 +18,7 @@ public class ClientMapper {
         return new Client(entity.getId(),entity.getName(), entity.getEmail(),
                 addressMapper.address(entity.getAddress()), entity.getUsername(), entity.getPassword(),
                 entity.getCpf(), entity.getBirthDay(), entity.getTelephone(), entity.getCreationDate(),
-                entity.getLastUpdateDate(), entity.isActive(), entity.getLastLoginDate()
+                entity.getLastUpdateDate(), entity.isActive(), entity.getLastLoginDate(), entity.getLoginAttempts()
         );
     }
 
@@ -27,7 +27,7 @@ public class ClientMapper {
         return new ClientEntity(client.getId(), client.getName(), client.getEmail(), addressMapper.entity(client.getAddress()),
                 client.getUsername(), client.getPassword(), client.getCpf(), client.getBirthDay(),
                 client.getTelephone(), client.getCreationDate(), client.getLastUpdateDate(), client.isActive(),
-                client.getLastLoginDate()
+                client.getLastLoginDate(), client.getLoginAttempts()
         );
     }
 

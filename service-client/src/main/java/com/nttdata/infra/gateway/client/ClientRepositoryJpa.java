@@ -6,9 +6,9 @@ import com.nttdata.application.usecase.role.RegisterRoleClient;
 import com.nttdata.domain.client.Client;
 import com.nttdata.domain.role.Role;
 import com.nttdata.domain.role.RoleName;
-import com.nttdata.infra.exception.newexception.ClientInactiveException;
-import com.nttdata.infra.exception.newexception.ClientNotExistsException;
-import com.nttdata.infra.exception.newexception.RegistryClientException;
+import com.nttdata.domain.exception.ClientInactiveException;
+import com.nttdata.domain.exception.ClientNotExistsException;
+import com.nttdata.domain.exception.RegistryClientException;
 import com.nttdata.infra.persistence.client.ClientEntity;
 import com.nttdata.infra.persistence.client.ClientRepositoryEntity;
 import jakarta.persistence.EntityNotFoundException;
@@ -75,7 +75,7 @@ public class ClientRepositoryJpa implements ClientRepository {
 
     @Override
     public void deleteClient(Long id) {
-        if (verifyActive(id)) {
+        if (verifyActiveById(id)) {
             ClientEntity entityDeleted = entityRepository.getReferenceById(id);
             entityDeleted.setActive(false);
             deleteRoleClient.delete(id);
@@ -92,7 +92,7 @@ public class ClientRepositoryJpa implements ClientRepository {
             ClientEntity oldEntity = entityRepository.getReferenceById(id);
             oldEntity.update(client);
             return clientMapper.toClient(entityRepository.getReferenceById(id));
-        }catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             throw new ClientNotExistsException("A client with ID " + id + " does not exist.");
         }
     }
@@ -108,7 +108,7 @@ public class ClientRepositoryJpa implements ClientRepository {
     }
 
     @Override
-    public boolean verifyActive(Long id) {
+    public boolean verifyActiveById(Long id) {
         try {
             var entity = entityRepository.getReferenceById(id);
             return entity.isActive();
@@ -122,9 +122,49 @@ public class ClientRepositoryJpa implements ClientRepository {
         try {
             var entity = entityRepository.getReferenceById(id);
             entity.setActive(active);
+            entity.setLoginAttempts(0);
             entityRepository.save(entity);
-        }catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             throw new ClientNotExistsException("A client with ID " + id + " does not exist.");
         }
     }
+
+    @Override
+    public int attemptsValidFail(String username) {
+        var entity = entityRepository.getReferenceByUsername(username);
+        entity.setLoginAttempts(entity.getLoginAttempts() + 1);
+        entityRepository.save(entity);
+        return entityRepository.getAttemptsByUsername(username);
+    }
+
+    @Override
+    public void deleteClientByUsername(String username) {
+        ClientEntity entityDeleted = entityRepository.getReferenceByUsername(username);
+        entityDeleted.setActive(false);
+        deleteRoleClient.delete(entityDeleted.getId());
+        deleteRoleClient.delete(entityDeleted.getId());
+    }
+
+    @Override
+    public int attemptsReset(String username) {
+        var entity = entityRepository.getReferenceByUsername(username);
+        entity.setLoginAttempts(0);
+        entityRepository.save(entity);
+        return entityRepository.getAttemptsByUsername(username);
+    }
+    @Override
+    public boolean verifyActiveByUsername(String username) {
+        try {
+            var entity = entityRepository.getReferenceByUsername(username);
+            return entity.isActive();
+        } catch (EntityNotFoundException e) {
+            throw new ClientNotExistsException("A client with username " + username + " does not exist.");
+        }
+    }
+
+    @Override
+    public int getAttemptsByUsername(String username) {
+        return entityRepository.getAttemptsByUsername(username);
+    }
+
 }

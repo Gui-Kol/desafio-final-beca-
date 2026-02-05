@@ -1,6 +1,9 @@
 package com.nttdata.infra.presentation.controller;
 
-import com.nttdata.infra.exception.newexception.JwtException;
+import com.nttdata.application.usecase.client.ValidLogin;
+import com.nttdata.application.usecase.client.VerifyClientActive;
+import com.nttdata.domain.exception.JwtException;
+import com.nttdata.domain.exception.ValidException;
 import com.nttdata.infra.gateway.client.ClientMapper;
 import com.nttdata.infra.persistence.client.ClientEntity;
 import com.nttdata.infra.presentation.dtos.security.AuthenticationDto;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/login")
 public class AuthenticationController {
+    private final ValidLogin validLogin;
 
     @Autowired
     ClientMapper clientMapper;
@@ -30,17 +34,31 @@ public class AuthenticationController {
     @Autowired
     private TokenService tokenService;
 
+    public AuthenticationController(ValidLogin validLogin) {
+        this.validLogin = validLogin;
+    }
+
     @PostMapping
-    public ResponseEntity login(@RequestBody @Valid AuthenticationDto dto){
+    public ResponseEntity login(@RequestBody @Valid AuthenticationDto dto) {
         try {
-            var token = new UsernamePasswordAuthenticationToken(dto.username(),dto.password());
+            validLogin.valid(dto.username());
+
+            var token = new UsernamePasswordAuthenticationToken(dto.username(), dto.password());
             var authentication = authenticationManager.authenticate(token);
             var tokenJWT = tokenService.generateToken(clientMapper.toClient((ClientEntity) authentication.getPrincipal()));
+
+            validLogin.validOk(dto.username());
+
             return ResponseEntity.ok(new TokenJWTDto(tokenJWT));
-        }catch (JwtException e){
+        } catch (AuthenticationException e) {
+            try {
+                validLogin.validFail(dto.username());
+                return ResponseEntity.internalServerError().body("Validation error");
+            }catch (ValidException ex) {
+                return ResponseEntity.badRequest().body(ex.getMessage());
+            }
+        } catch (JwtException | ValidException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (AuthenticationException e){
-            return ResponseEntity.badRequest().body("Incorrect password and/or username!");
         }
     }
 

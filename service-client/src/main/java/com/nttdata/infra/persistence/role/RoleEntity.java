@@ -2,7 +2,7 @@ package com.nttdata.infra.persistence.role;
 
 import com.nttdata.domain.role.Role;
 import com.nttdata.domain.role.RoleName;
-import com.nttdata.infra.exception.newexception.UpdateFailException;
+import com.nttdata.domain.exception.UpdateFailException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

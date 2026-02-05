@@ -18,7 +18,17 @@ public interface ClientRepository {
 
     boolean existsClientByid(Long id);
 
-    boolean verifyActive(Long id);
+    boolean verifyActiveById(Long id);
 
     void setClientActive(Long id, boolean active);
+
+    int attemptsValidFail(String username);
+
+    void deleteClientByUsername(String username);
+
+    int attemptsReset(String username);
+
+    boolean verifyActiveByUsername(String username);
+
+    int getAttemptsByUsername(String username);
 }

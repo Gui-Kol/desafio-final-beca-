@@ -11,4 +11,5 @@ public interface RoleRepository {
     Role findRoleByClientId(Long id);
 
     Role updateClientRole(Long clientId, RoleName roleName);
+
 }

@@ -1,8 +1,8 @@
 package com.nttdata.infra.presentation.controller;
 
-import com.nttdata.infra.exception.newexception.ClientInactiveException;
-import com.nttdata.infra.exception.newexception.ClientNotExistsException;
-import com.nttdata.infra.exception.newexception.RegistryClientException;
+import com.nttdata.domain.exception.ClientInactiveException;
+import com.nttdata.domain.exception.ClientNotExistsException;
+import com.nttdata.domain.exception.RegistryClientException;
 import com.nttdata.application.usecase.client.*;
 import com.nttdata.domain.client.ClientFactory;
 import com.nttdata.infra.presentation.dtos.client.ClientDto;

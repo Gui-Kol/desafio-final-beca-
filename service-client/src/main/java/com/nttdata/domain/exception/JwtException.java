@@ -1,4 +1,4 @@
-package com.nttdata.infra.exception.newexception;
+package com.nttdata.domain.exception;
 
 public class JwtException extends RuntimeException {
     public JwtException(String message) {

@@ -3,7 +3,7 @@ package com.nttdata.infra.gateway.role;
 import com.nttdata.application.repository.RoleRepository;
 import com.nttdata.domain.role.Role;
 import com.nttdata.domain.role.RoleName;
-import com.nttdata.infra.exception.newexception.ClientNotExistsException;
+import com.nttdata.domain.exception.ClientNotExistsException;
 import com.nttdata.infra.persistence.role.RoleEntity;
 import com.nttdata.infra.persistence.role.RoleRepositoryEntity;
 

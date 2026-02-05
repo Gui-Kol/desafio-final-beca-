@@ -62,4 +62,8 @@ public class ClientConfig {
     public VerifyClientActive verifyClientActive(ClientRepository repository){
         return new VerifyClientActive(repository);
     }
+    @Bean
+    public ValidLogin validLogin(ClientRepository repository){
+        return new ValidLogin(repository);
+    }
 }
