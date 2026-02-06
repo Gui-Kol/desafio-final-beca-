@@ -20,7 +20,7 @@ public class ValidateService {
         String url = "http://6973d075b5f46f8b5828534e.mockapi.io/mockapi/bank";
 
         try {
-            return restTemplate.getForObject(url + "/" + id, BankDto.class);
+            return restTemplate.getForObject(url + "/?clientId=" + id, BankDto.class);
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
 
